@@ -11,5 +11,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-webhooks": "^1.4.2"
+  },
+  "engines": {
+    "node": "14.17.0"
   }
 }
