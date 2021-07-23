@@ -1,18 +1,7 @@
-// const express = require('express')
-// const app = express();
-// const port = process.env.PORT || 4000
-// const WebHooks = require('node-webhooks')
-// webHooks = new WebHooks({
-//     db: {"backend":['http://localhost:3000/api/v1/categories/webhook']},
-//     httpSuccessCodes:[200,201,202,203,204]
-// })
 
-document.querySelector("button").addEventListener("click",()=>{
-    console.log("Button hit");
-    //webHooks.trigger("backend",{data:"TestMessage"})
+document.querySelector("button").addEventListener("click",async ()=>{
+const url = "http://localhost:3000/api/v1/categories/client";
+const body = JSON.stringify({data:"hello from client side"})
+await fetch(url,{method:'GET'},body).then(response=>response.json()).then(data=>console.log(data)).catch(err=>console.log(err))
 })
-
-// app.listen(port,()=>{
-//     console.log("Server running on",port);
-// })
 
