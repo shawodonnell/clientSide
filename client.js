@@ -7,7 +7,7 @@
 //     httpSuccessCodes:[200,201,202,203,204]
 // })
 
-document.querySelector(button).addEventListener("click",()=>{
+document.querySelector("button").addEventListener("click",()=>{
     console.log("Button hit");
     //webHooks.trigger("backend",{data:"TestMessage"})
 })
