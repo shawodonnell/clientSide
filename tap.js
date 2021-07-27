@@ -35,9 +35,9 @@ document.querySelector("#cart").addEventListener("click", async () => {
             }
         ]
     }
-
-    let form = new FormData();
-    form.append("json",JSON.stringify(data))
+    data = JSON.stringify(data);
+    let form = new FormData(data);
+    console.log("FORM",form);
 
     await fetch(url, {
         method: 'POST',
@@ -48,7 +48,7 @@ document.querySelector("#cart").addEventListener("click", async () => {
             "referrer":"localHost", 
             },
         body: form})
-        .then(response => response.json())
+        //.then(response => response.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
 
