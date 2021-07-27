@@ -1,5 +1,4 @@
-document.cookie = "WhyteGoodMan=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5NGJkNzFiLWQ5YTEtNGZlOC05NTRhLTQ1YWQ4MzdmZmQ4NSIsImlhdCI6MTYyNzMxODM2OX0.o9pua8PTeM2OBcy366q-Aulf_fSLlCZEKJfA1mhh7K0"
-console.log(document.cookie);
+//document.cookie = "WhyteGoodMan=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5NGJkNzFiLWQ5YTEtNGZlOC05NTRhLTQ1YWQ4MzdmZmQ4NSIsImlhdCI6MTYyNzMxODM2OX0.o9pua8PTeM2OBcy366q-Aulf_fSLlCZEKJfA1mhh7K0"
 const socket = io("http://localhost:3000");
 const cartSocket = io("http://localhost:3000/api/v1/cart")
 let cartID;
@@ -40,7 +39,7 @@ document.querySelector("#cart").addEventListener("click", async () => {
     await axios.post("http://localhost:3000/api/v1/cart",{
         title:"cartObject",
         fingerprint: "de4b27d8beca3167f9ec694d76aa5a35"
-    },{withCredentials:true})
+    },{withCredentials: true})
     .then(response=>console.log(response)
     .catch(err=>console.log(err)))
 
