@@ -40,7 +40,9 @@ document.querySelector("#cart").addEventListener("click", async () => {
     await axios.post("http://localhost:3000/api/v1/cart",{
         title:"cartObject",
         fingerprint: "de4b27d8beca3167f9ec694d76aa5a35"
-    },(err)=>console.log(err))
+    },{withCredentials:true})
+    .then(response=>console.log(response)
+    .catch(err=>console.log(err)))
 
 })
 
