@@ -7,10 +7,7 @@ let cartID;
 document.querySelector("#cookie").addEventListener("click", async () => {
     let url = "http://localhost:3000/api/v1/users/60f85a5ecf06402d10247601";
         
-    await fetch(url)
-    .then(response=>response.json())
-    .then(data=>console.log(data))
-    .catch(err=>console.log(err))
+    axios.get(url,{withCredentials:true}).then(response=>console.log(response).catch(err=>console.log(err)))
 })
 
 document.querySelector("#cart").addEventListener("click", async () => {
