@@ -5,14 +5,14 @@ let cartID;
 
 //simulating logging and cookie being loaded into browser
 document.querySelector("#cookie").addEventListener("click", async () => {
-    let url = "http://localhost:3000/api/v1/users/60f85a5ecf06402d10247601";
+    let url = "http://127.0.0.1:3000/api/v1/users/60f85a5ecf06402d10247601";
         
-    axios.get(url,{withCredentials:true}).then(response=>console.log(response).catch(err=>console.log(err)))
+    axios.get(url,{withCredentials:true}).then(response=>console.log(response))
 })
 
 document.querySelector("#cart").addEventListener("click", async () => {
 
-    const url = "http://127.0.0.1:3000/api/v1/cart";
+    //const url = "http://127.0.0.1:3000/api/v1/cart";
     //const url = "http://localhost:2000/";
     let data = {
         fingerprint: "de4b27d8beca3167f9ec694d76aa5a35",
