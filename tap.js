@@ -51,8 +51,12 @@ document.querySelector("#cart").addEventListener("click", async () => {
             }
         ]
     },{withCredentials: true})
-    .then(response=>console.log(response)
-    .catch(err=>console.log(err)))
+    .then(response=>response.json())
+    .then(data=>{
+        console.log(data)
+        document.querySelector(div).innerHTML = data
+    })
+    .catch(err=>console.log(err))
 
 })
 
