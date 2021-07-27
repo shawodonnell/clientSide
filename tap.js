@@ -36,6 +36,7 @@ document.querySelector("#cart").addEventListener("click", async () => {
         ]
     }
     data = JSON.stringify(data);
+    console.log("DATA",data);
     let form = new FormData(data);
     console.log("FORM",form);
 
