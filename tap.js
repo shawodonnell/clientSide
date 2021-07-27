@@ -35,19 +35,19 @@ document.querySelector("#cart").addEventListener("click", async () => {
             }
         ]
     }
-    
-    data = JSON.stringify(data);
-    console.log(data);
+
+    let form = new FormData();
+    form.append("json",JSON.stringify(data))
 
     await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Accept': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x-www-form-urlencoded',
             "referrer":"localHost", 
             },
-        body: JSON.stringify(data)})
+        body: form})
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
