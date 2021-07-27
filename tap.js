@@ -1,32 +1,57 @@
+document.cookie = "WhyteGoodMan=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5NGJkNzFiLWQ5YTEtNGZlOC05NTRhLTQ1YWQ4MzdmZmQ4NSIsImlhdCI6MTYyNzMxODM2OX0.o9pua8PTeM2OBcy366q-Aulf_fSLlCZEKJfA1mhh7K0"
+console.log(document.cookie);
 const socket = io("http://localhost:3000");
+const cartSocket = io("http://localhost:3000/api/v1/cart")
+let cartID;
 
-console.log(window.location.origin);
+//simulating logging and cookie being loaded into browser
+document.querySelector("#cookie").addEventListener("click", async () => {
+    let url = "http://localhost:3000/api/v1/users/60f85a5ecf06402d10247601";
+        
+    await fetch(url)
+    .then(response=>response.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.log(err))
+})
 
-module.exports = function(io) {
-    io.on('connection', function(socket) {
-        socket.on('message', function(message) {
-            socket.emit('ditConsumer',message.value);
-            console.log('from console',message.value);
-        });
-    });
-};
+document.querySelector("#cart").addEventListener("click", async () => {
 
-socket.on("message",(data)=>{
+    const url = "http://localhost:3000/api/v1/cart";
+    //const url = "http://localhost:2000/";
+    let data = {
+        fingerprint: "de4b27d8beca3167f9ec694d76aa5a35",
+        products: [
+            {
+                productID: 573901,
+                quantity: 2
+            },
+            {
+                productID: 573901,
+                quantity: 2
+            },
+            {
+                productID: 573901,
+                quantity: 2
+            }
+        ]
+    }
+    
+    data = JSON.stringify(data);
     console.log(data);
-})
-socket.on("catMessage",(data)=>{
-    console.log(data);
-})
 
-document.querySelector("button").addEventListener("click",async ()=>{
-const url = "http://localhost:3000/api/v1/categories/client";
-const body = JSON.stringify({data:"hello from client side"})
-await fetch(url,{method:'POST','Content-Type':'application/json'},body).then(response=>response.json()).then(
-    data=>console.log(data)).catch(err=>console.log(err))
+    await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "referrer":"localHost", 
+            },
+        body: JSON.stringify(data)})
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
 
-socket.on("catMessage",(data)=>{
-        console.log(data);
-})
 })
 
 
