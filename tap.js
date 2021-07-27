@@ -1,6 +1,5 @@
 document.cookie = "WhyteGoodMan=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5NGJkNzFiLWQ5YTEtNGZlOC05NTRhLTQ1YWQ4MzdmZmQ4NSIsImlhdCI6MTYyNzMxODM2OX0.o9pua8PTeM2OBcy366q-Aulf_fSLlCZEKJfA1mhh7K0"
 console.log(document.cookie);
-import axios from "axious";
 const socket = io("http://localhost:3000");
 const cartSocket = io("http://localhost:3000/api/v1/cart")
 let cartID;
