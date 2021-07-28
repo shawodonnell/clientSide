@@ -110,6 +110,7 @@ document.querySelector("#update").addEventListener("click", async () => {
   await axios.put("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: fingerprint,
       cartID:cartID,
+      userID:userID,
       products: [
           {
               productID: 573901,
