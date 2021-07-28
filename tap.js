@@ -16,6 +16,10 @@ document.querySelector("#cookie").addEventListener("click", async () => {
 //Simluating cart button being hit
 document.querySelector("#cart").addEventListener("click", async () => {
 
+  if(!socket.id){
+    socket.socket.connect()
+  }
+
   socket.on("cartID",(data)=>{
     cartID = data;
     console.log("CARTID",cartID);
