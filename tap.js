@@ -4,12 +4,14 @@ let cartID;
 
 socket.on("connect",()=>{
   console.log("New Server Connection",socket.id);
+  socket.sendBuffer = [];
 })
 
-socket.on("disconnect",()=>{
-  let newSocket = socket.connect();
-  console.log("Server reconnected",newSocket.id);
-})
+// socket.on("disconnect",()=>{
+//   socket.connect();
+//   socket.sendBuffer = [];
+//   console.log("Server reconnected",socket.id);
+// })
 
 //simulating logging and cookie being loaded into browser
 document.querySelector("#cookie").addEventListener("click", async () => {
@@ -43,8 +45,14 @@ document.querySelector("#cart").addEventListener("click", async () => {
   })
 
   socket.on("disconnectWS",(data)=>{
-    console.log("Disconnect...", data);
+    console.log("Disconnecting...", data);
     socket.disconnect();
+    socket.sendBuffer = [];
+    socket.connect();
+    if(socket.id){
+      console.log("socket reconnecting..",socket.id);
+    }
+    
   })
 
   await axios.post("http://127.0.0.1:3000/api/v1/cart",{
