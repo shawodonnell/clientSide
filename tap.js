@@ -21,7 +21,6 @@ document.querySelector("#cart").addEventListener("click", async () => {
     console.log("CARTID",cartID);
   })
 
-
   await axios.post("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: "de4b27d8beca3167f9ec694d76aa5a35",
       products: [
@@ -39,10 +38,7 @@ document.querySelector("#cart").addEventListener("click", async () => {
           }
       ]
   },{withCredentials: true})
-  .then(response=>JSON.parse(response.body))
-  .then(data=>{
-      console.log(data)
-  })
+  .then(response=>console.log(response))
   .catch(err=>console.log(err))
 
 })
