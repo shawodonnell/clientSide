@@ -1,6 +1,7 @@
 //document.cookie = "WhyteGoodMan=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5NGJkNzFiLWQ5YTEtNGZlOC05NTRhLTQ1YWQ4MzdmZmQ4NSIsImlhdCI6MTYyNzMxODM2OX0.o9pua8PTeM2OBcy366q-Aulf_fSLlCZEKJfA1mhh7K0"
 const socket = io("http://127.0.0.1:3000");
 let cartID;
+
 socket.on("connect",()=>{
   console.log("New Server Connection",socket.id);
 })
@@ -14,6 +15,12 @@ document.querySelector("#cookie").addEventListener("click", async () => {
 
 //Simluating cart button being hit
 document.querySelector("#cart").addEventListener("click", async () => {
+
+  socket.on("cartID",(data)=>{
+    cartID = data;
+    console.log("CARTID",cartID);
+  })
+
 
   await axios.post("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: "de4b27d8beca3167f9ec694d76aa5a35",
