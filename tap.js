@@ -47,8 +47,8 @@ document.querySelector("#cart").addEventListener("click", async () => {
   socket.on("disconnectWS",(data)=>{
     console.log("Disconnecting...", data);
     socket.disconnect();
-    socket.sendBuffer = [];
     socket.connect();
+    socket.sendBuffer = [];
     if(socket.id){
       console.log("socket reconnecting..",socket.id);
     }
