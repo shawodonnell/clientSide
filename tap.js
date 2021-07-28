@@ -4,7 +4,6 @@ let cartID;
 
 socket.on("connect",()=>{
   console.log("New Server Connection",socket.id);
-  socket.sendBuffer = [];
 })
 
 // socket.on("disconnect",()=>{
@@ -47,12 +46,8 @@ document.querySelector("#cart").addEventListener("click", async () => {
   socket.on("disconnectWS",(data)=>{
     console.log("Disconnecting...", data);
     socket.disconnect();
-    socket.connect();
-    socket.sendBuffer = [];
-    if(socket.id){
-      console.log("socket reconnecting..",socket.id);
-    }
-    
+    socket = null
+    socket.connect();        
   })
 
   await axios.post("http://127.0.0.1:3000/api/v1/cart",{
