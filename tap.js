@@ -6,6 +6,11 @@ socket.on("connect",()=>{
   console.log("New Server Connection",socket.id);
 })
 
+socket.on("disconnect",()=>{
+  let newSocket = socket.connect();
+  console.log("Server reconnected",newSocket.id);
+})
+
 //simulating logging and cookie being loaded into browser
 document.querySelector("#cookie").addEventListener("click", async () => {
   let url = "http://127.0.0.1:3000/api/v1/users/60f85a5ecf06402d10247601";
@@ -17,7 +22,7 @@ document.querySelector("#cookie").addEventListener("click", async () => {
 document.querySelector("#cart").addEventListener("click", async () => {
 
   if(!socket.id){
-    socket.socket.connect()
+    io.connect()
   }
 
   socket.on("cartID",(data)=>{
@@ -66,7 +71,6 @@ document.querySelector("#cart").addEventListener("click", async () => {
   .then(response=>{
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
-    socket.disconnect();
   })
   .catch(err=>console.log(err))
 
