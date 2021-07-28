@@ -21,10 +21,6 @@ document.querySelector("#cookie").addEventListener("click", async () => {
 //Simluating cart button being hit
 document.querySelector("#cart").addEventListener("click", async () => {
 
-  if(!socket.id){
-    io.connect()
-  }
-
   socket.on("cartID",(data)=>{
     cartID = data;
     console.log("CARTID",cartID);
@@ -47,8 +43,8 @@ document.querySelector("#cart").addEventListener("click", async () => {
   })
 
   socket.on("disconnectWS",(data)=>{
+    console.log("Disconnect...", data);
     socket.disconnect();
-    console.log("Server disconnecting.....");
   })
 
   await axios.post("http://127.0.0.1:3000/api/v1/cart",{
