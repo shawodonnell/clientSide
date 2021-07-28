@@ -25,6 +25,10 @@ document.querySelector("#cart").addEventListener("click", async () => {
     console.log("orderProcessing",data);
   })
 
+  socket.on("timerStarted",(data)=>{
+    console.log("timer started",data);
+  })
+
   socket.on("orderComplete",(data)=>{
     console.log("order Completed",data);
   })
@@ -51,7 +55,7 @@ document.querySelector("#cart").addEventListener("click", async () => {
       ]
   },{withCredentials: true})
   .then(response=>{
-    console.log(response.data)
+    console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
   })
   .catch(err=>console.log(err))
