@@ -79,7 +79,7 @@ async function tapHandler(e) {
       socket.connect();
     })
 
-    if (isProcessing && target.className.contains("triggerBtn")) {
+    if (isProcessing && target.classList.contains("triggerBtn")) {
       console.log("Delete - HIT from TAP");
       //DELETE    
       isProcessing = false;
@@ -96,7 +96,7 @@ async function tapHandler(e) {
         })
         .catch(err => console.log(err))
     } 
-    else if(isProcessing && !target.className.contains("triggerBtn")){
+    else if(isProcessing && !target.classList.contains("triggerBtn")){
       //AMEND
       socket.on("cartAmended", (data) => {
         console.log("Order Amended...", data);
