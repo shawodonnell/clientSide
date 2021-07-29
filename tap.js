@@ -11,20 +11,8 @@ socket.on("connect",()=>{
 
 socket.on("failedUserAuth",(data)=>{
   alert(data)
-  window.open("www.google.com",_blank)
+  window.open("www.google.com","_blank")
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 //PAGE EVENT LISTENERS
 
