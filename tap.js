@@ -11,6 +11,7 @@ socket.on("connect",()=>{
 
 socket.on("failedUserAuth",(data)=>{
   alert(data)
+  //Include https:// otherwise appends URL onto current webpages url
   window.open("https://www.google.com","_blank")
 })
 
@@ -29,6 +30,15 @@ document.querySelector("#cart").addEventListener("click", async () => {
   socket.on("cartID",(data)=>{
     cartID = data;
     console.log("CARTID",cartID);
+  })
+
+  socket.on("retailerError",(data)=>{
+    alert(data);
+  })
+
+  socket.on("customerAuthError",(data)=>{
+    alert(data);
+    window.open("https://www.google.com","_blank")
   })
 
   socket.on("orderProcessing",(data)=>{
