@@ -1,8 +1,10 @@
-#cart{
+.tap_btn{
     height: 50px;
     width: 50px;
     color: white;
     background-color: red;
     border: 5px solid black;
-    
+    overflow-x: visible;    
+    white-space: normal;
+    word-wrap: break-word;
 }
