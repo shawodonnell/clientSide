@@ -78,8 +78,8 @@ cartBTN.addEventListener("click", async () => {
   })
 
   if(isProcessing){
-    //DELETE
-    isProcessing = false;
+    console.log("DeleteHIT from TAP");
+    //DELETE    
     cartBTN.style.backgroundColor = "red"
     cartBTN.disabled = true;
     await axios.put("http://127.0.0.1:3000/api/v1/cart",{
@@ -100,6 +100,7 @@ cartBTN.addEventListener("click", async () => {
   })
   .catch(err=>console.log(err))
   cartBTN.disabled = false;
+  isProcessing = false;
   } 
   else {
     //PURCHASE
@@ -130,6 +131,7 @@ cartBTN.addEventListener("click", async () => {
   .catch(err=>console.log(err))
   }
   cartBTN.disabled = false;
+  console.log("Button active again");
 })
 
 //AMENDING A CART**************************************************
