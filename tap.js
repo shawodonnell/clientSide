@@ -93,7 +93,7 @@ cartBTN.addEventListener("click", async () => {
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
     isProcessing = false;
-    cartBTN.classList.toggle("delete");
+    cartBTN.style.backgroundColor = "red"
   })
   .catch(err=>console.log(err))
   } 
@@ -120,7 +120,7 @@ cartBTN.addEventListener("click", async () => {
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
     isProcessing = true;
-    cartBTN.classList.toggle("delete");    
+    cartBTN.style.backgroundColor = "green"
   })
   .catch(err=>console.log(err))
   }
@@ -182,42 +182,15 @@ document.querySelector("#update").addEventListener("click", async () => {
 
 //DELETING A CART**************************************************
 document.querySelector("#delete").addEventListener("click", async () => {
-
-  socket.on("deletingCart",(data)=>{
-    console.log("deleting cart...",data);
-  })
-
-  socket.on("timerStopped",(data)=>{
-    console.log("timer:",data);
-  })
-
-  socket.on("cartDeleted",(data)=>{
-    console.log("Deleted...",data);
-  })
-
-  socket.on("deleteError",(data)=>{
-    console.log("ERROR...",data);
-  })
-
-  socket.on("disconnectWS",(data)=>{
-    console.log("Disconnecting...", data);
-    socket.disconnect();
-    socket = null
-    socket = io("http://127.0.0.1:3000");
-    socket.connect();        
-  })
-
-  await axios.delete("http://127.0.0.1:3000/api/v1/cart",{
-    data:{
-      cartID:cartID,
-      userID:userID,
-    }     
-  })
-  .then(response=>{
-    console.log("DELETE RESPONSE",response)
-  })
-  .catch(err=>console.log(err))
-
+  if(isProcessing){
+    cartBTN.style.backgroundColor = "green"
+    isProcessing = false
+  } else{
+    
+    isProcessing=true
+  }
+  
+  
 })
 
 //FUNCTIONS
