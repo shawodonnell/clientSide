@@ -38,9 +38,6 @@ document.querySelector("#cookie").addEventListener("click", async () => {
 //NEW CART/PURCHASE********************************************
 document.querySelector("#cart").addEventListener("click", async () => {
 
-  
-  document.querySelector("#cartAudio").playAudio("https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3");
-
   socket.on("cartID",(data)=>{
     cartID = data;
     console.log("CARTID",cartID);
