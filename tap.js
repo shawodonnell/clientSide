@@ -78,35 +78,25 @@ cartBTN.addEventListener("click", async () => {
   })
 
   if(isProcessing){
-    console.log("DeleteHIT from TAP");
+    console.log("Delete - HIT from TAP");
     //DELETE    
+    isProcessing = false;    
     cartBTN.style.backgroundColor = "red"
-    cartBTN.disabled = true;
-    await axios.put("http://127.0.0.1:3000/api/v1/cart",{
-      fingerprint: fingerprint,
+    await axios.delete("http://127.0.0.1:3000/api/v1/cart",{
+    data:{
       cartID:cartID,
       userID:userID,
-      products: [
-          {
-              productID: 573901,
-              quantity: 2
-          }
-      ]
-  },{withCredentials: true})
+    }     
+  })
   .then(response=>{
-    console.log("Order Complete",response.data)
-    document.querySelector("div").innerHTML = response.data;
-    
+    console.log("DELETE RESPONSE",response)
   })
   .catch(err=>console.log(err))
-  cartBTN.disabled = false;
-  isProcessing = false;
   } 
   else {
     //PURCHASE
     isProcessing = true;
     cartBTN.style.backgroundColor = "green"
-    cartBTN.disabled = true;
     await axios.post("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: fingerprint ,
       products: [
@@ -130,8 +120,6 @@ cartBTN.addEventListener("click", async () => {
   })
   .catch(err=>console.log(err))
   }
-  cartBTN.disabled = false;
-  console.log("Button active again");
 })
 
 //AMENDING A CART**************************************************
@@ -188,16 +176,6 @@ document.querySelector("#update").addEventListener("click", async () => {
 
 })
 
-//DELETING A CART**************************************************
-document.querySelector("#delete").addEventListener("click", async () => {
-  if(isProcessing){
-    cartBTN.style.backgroundColor = "green"
-    isProcessing = false
-  } else{
-    
-    isProcessing=true
-  } 
-})
 
 //FUNCTIONS
 function play() {
