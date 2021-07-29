@@ -46,6 +46,7 @@ cartBTN.addEventListener("click", async () => {
   socket.on("orderComplete",(data)=>{
     console.log("order Completed",data);
     isProcessing = false;
+    cartBTN.style.backgroundColor = "red"
   })
 
   socket.on("timerStarted",(data)=>{
@@ -78,6 +79,9 @@ cartBTN.addEventListener("click", async () => {
 
   if(isProcessing){
     //DELETE
+    isProcessing = false;
+    cartBTN.style.backgroundColor = "red"
+    cartBTN.disabled = true;
     await axios.put("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: fingerprint,
       cartID:cartID,
@@ -92,13 +96,16 @@ cartBTN.addEventListener("click", async () => {
   .then(response=>{
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
-    isProcessing = false;
-    cartBTN.style.backgroundColor = "red"
+    
   })
   .catch(err=>console.log(err))
+  cartBTN.disabled = false;
   } 
   else {
     //PURCHASE
+    isProcessing = true;
+    cartBTN.style.backgroundColor = "green"
+    cartBTN.disabled = true;
     await axios.post("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: fingerprint ,
       products: [
@@ -119,11 +126,10 @@ cartBTN.addEventListener("click", async () => {
   .then(response=>{
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
-    isProcessing = true;
-    cartBTN.style.backgroundColor = "green"
   })
   .catch(err=>console.log(err))
   }
+  cartBTN.disabled = false;
 })
 
 //AMENDING A CART**************************************************
@@ -188,9 +194,7 @@ document.querySelector("#delete").addEventListener("click", async () => {
   } else{
     
     isProcessing=true
-  }
-  
-  
+  } 
 })
 
 //FUNCTIONS
