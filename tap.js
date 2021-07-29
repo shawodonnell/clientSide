@@ -3,6 +3,9 @@ let socket = io("http://127.0.0.1:3000");
 let cartID;
 let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
+let isProcessing = false;
+const cartBTN = document.querySelector("#cart");
+
 
 //SOCKET EVENT LISTENERS
 socket.on("connect",()=>{
@@ -16,7 +19,6 @@ socket.on("failedUserAuth",(data)=>{
 })
 
 //PAGE EVENT LISTENERS
-
 //simulating logging and cookie being loaded into browser*********************************
 document.querySelector("#cookie").addEventListener("click", async () => {
   let url = `http://127.0.0.1:3000/api/v1/users/${userID}`;
@@ -24,8 +26,8 @@ document.querySelector("#cookie").addEventListener("click", async () => {
   await axios.get(url,{withCredentials:true}).then(response=>console.log(response))
 })
 
-//NEW CART/PURCHASE********************************************
-document.querySelector("#cart").addEventListener("click", async () => {
+//NEW CART PURCHASE AND DELETE********************************************
+cartBTN.addEventListener("click", async () => {
 
   socket.on("cartID",(data)=>{
     cartID = data;
@@ -40,22 +42,30 @@ document.querySelector("#cart").addEventListener("click", async () => {
     alert(data);
     window.open("https://www.google.com","_blank")
   })
-
-  socket.on("orderProcessing",(data)=>{
-    console.log("orderProcessing",data);
+  
+  socket.on("orderComplete",(data)=>{
+    console.log("order Completed",data);
+    isProcessing = false;
   })
 
   socket.on("timerStarted",(data)=>{
     console.log("timer started",data);
   })
 
-  socket.on("orderComplete",(data)=>{
-    console.log("order Completed",data);
-
+  socket.on("deletingCart",(data)=>{
+    console.log("deleting cart...",data);
   })
 
-  socket.on("responseIncoming",(data)=>{
-    console.log("Response...",data);
+  socket.on("timerStopped",(data)=>{
+    console.log("timer:",data);
+  })
+
+  socket.on("cartDeleted",(data)=>{
+    console.log("Deleted...",data);
+  })
+
+  socket.on("deleteError",(data)=>{
+    console.log("ERROR...",data);
   })
 
   socket.on("disconnectWS",(data)=>{
@@ -66,7 +76,30 @@ document.querySelector("#cart").addEventListener("click", async () => {
     socket.connect();        
   })
 
-  await axios.post("http://127.0.0.1:3000/api/v1/cart",{
+  if(isProcessing){
+    //DELETE
+    await axios.put("http://127.0.0.1:3000/api/v1/cart",{
+      fingerprint: fingerprint,
+      cartID:cartID,
+      userID:userID,
+      products: [
+          {
+              productID: 573901,
+              quantity: 2
+          }
+      ]
+  },{withCredentials: true})
+  .then(response=>{
+    console.log("Order Complete",response.data)
+    document.querySelector("div").innerHTML = response.data;
+    isProcessing = false;
+    cartBTN.classList.toggle("delete");
+  })
+  .catch(err=>console.log(err))
+  } 
+  else {
+    //PURCHASE
+    await axios.post("http://127.0.0.1:3000/api/v1/cart",{
       fingerprint: fingerprint ,
       products: [
           {
@@ -86,9 +119,11 @@ document.querySelector("#cart").addEventListener("click", async () => {
   .then(response=>{
     console.log("Order Complete",response.data)
     document.querySelector("div").innerHTML = response.data;
+    isProcessing = true;
+    cartBTN.classList.toggle("delete");    
   })
   .catch(err=>console.log(err))
-
+  }
 })
 
 //AMENDING A CART**************************************************
