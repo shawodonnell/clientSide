@@ -54,6 +54,8 @@ function byAncestor(node, previousCount = 0) {
             return
         }
     } catch (error) {
+        console.log(error);
+    } finally {
         continue
     }
 
