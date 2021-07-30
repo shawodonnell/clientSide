@@ -48,9 +48,9 @@ function byAncestor(node, previousCount = 0) {
 try {
     let currentCount = node.childNodes.length;
     //recursive killer
-    if (node.parentElement.localName === 'main' || node.parentElement.nodeName === "main") {
-        return
-    }
+    // if (node.parentElement.localName === 'main' || node.parentElement.nodeName === "main") {
+    //     return
+    // }
     if (node.localName !== 'main' || node.nodeName !== "main") {
         if (currentCount > previousCount) {
             let className = node.className;
