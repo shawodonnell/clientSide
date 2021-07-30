@@ -3,7 +3,6 @@ let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
 let socket = io("http://127.0.0.1:3000",{
-  forceNew:true,
   reconnection:false,
   autoConnect:false
 });
@@ -17,6 +16,11 @@ socket.on("cartID", (data) => {
 
 socket.on("connect", () => {
     console.log("New Server Connection", socket.id);
+  })
+
+  socket.on("newConnect", (data) => {
+    console.log(data);
+    reconnectSocket()
   })
   
   socket.on("failedUserAuth", (data) => {
@@ -219,4 +223,5 @@ async function reconnectSocket(){
 //    socket = null
 //    socket = io("http://127.0.0.1:3000");
     socket.open();
+    console.log("New Server Connection 2", socket.id);
 }
