@@ -64,13 +64,13 @@ socket.on("connect", () => {
     console.log("ERROR...", data);
   })
 
-  socket.on("disconnectWS", (data) => {
-    console.log("Disconnecting...", data);
-    socket.disconnect();
-    socket = null
-    socket = io("http://127.0.0.1:3000");
-    socket.connect();
-  })
+  // socket.on("disconnectWS", (data) => {
+  //   console.log("Disconnecting...", data);
+  //   socket.disconnect();
+  //   socket = null
+  //   socket = io("http://127.0.0.1:3000");
+  //   socket.connect();
+  // })
 
   socket.on("cartAmended", (data) => {
     console.log("Order Amended...", data);
@@ -120,8 +120,6 @@ async function makePurchase(e) {
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
 
-
-
     await axios.post("http://127.0.0.1:3000/api/v1/cart", {
       fingerprint: fingerprint,
       products: [
@@ -142,12 +140,13 @@ async function makePurchase(e) {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
+        await reconnectSocket()
       })
       .catch(err => console.log(err))
   }
 }
 
-async function amendCart() {
+async function amendCart(target) {
   //AMEND
     console.log("Amend Hit");
     //AMEND
@@ -168,6 +167,7 @@ async function amendCart() {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
+        await reconnectSocket()
       })
       .catch(err => console.log(err))
   }
@@ -175,6 +175,10 @@ async function amendCart() {
 async function deleteCart() {
   //DELETE  
     console.log("Delete - HIT from TAP");
+
+    if(!cartID){
+      return
+    }
 
     isProcessing = false;
     await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
@@ -185,6 +189,8 @@ async function deleteCart() {
     })
       .then(response => {
         console.log("DELETE RESPONSE", response)
+        cartID = "";
+        await reconnectSocket()
       })
       .catch(err => console.log(err))
 
@@ -205,3 +211,9 @@ function play() {
   audio.play();
 }
 
+async function reconnectSocket(){
+    socket.disconnect();
+    socket = null
+    socket = io("http://127.0.0.1:3000");
+    socket.connect();
+}
