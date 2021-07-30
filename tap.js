@@ -2,7 +2,11 @@ let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
-let socket = io("http://127.0.0.1:3000");
+let socket = io("http://127.0.0.1:3000",{
+  forceNew:true,
+  reconnection:false,
+  autoConnect:false
+});
 
 //SOCKET EVENT LISTENERS
 
@@ -212,8 +216,7 @@ function play() {
 }
 
 async function reconnectSocket(){
-    socket.disconnect();
-    socket = null
-    socket = io("http://127.0.0.1:3000");
-    socket.connect();
+//    socket = null
+//    socket = io("http://127.0.0.1:3000");
+    socket.open();
 }
