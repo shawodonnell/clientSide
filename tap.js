@@ -212,7 +212,8 @@ function resetElements(){
 
 function receipt(data){
   const div = document.querySelector(".receipt");
-  div.innerHTML = data.name,data.dataOrdered,data.items.toString(),data.price;
+  receiptData = {name:data.name,date:data.dataOrdered,items:data.items.toString(),price:data.price}
+  div.innerHTML = receiptData
   
 }
 
