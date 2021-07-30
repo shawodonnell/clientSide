@@ -214,7 +214,6 @@ function receipt(data){
   const div = document.querySelector(".receipt");
   receiptData = {name:data.name,date:data.dataOrdered,items:data.items.toString(),price:data.price}
   div.innerHTML = receiptData
-  
 }
 
 //PAGE EVENT LISTENERS
