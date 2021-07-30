@@ -140,7 +140,7 @@ async function makePurchase(e) {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
-        await reconnectSocket()
+        reconnectSocket()
       })
       .catch(err => console.log(err))
   }
@@ -167,7 +167,7 @@ async function amendCart(target) {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
-        await reconnectSocket()
+        reconnectSocket()
       })
       .catch(err => console.log(err))
   }
@@ -190,7 +190,7 @@ async function deleteCart() {
       .then(response => {
         console.log("DELETE RESPONSE", response)
         cartID = "";
-        await reconnectSocket()
+        reconnectSocket()
       })
       .catch(err => console.log(err))
 
