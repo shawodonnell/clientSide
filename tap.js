@@ -1,189 +1,103 @@
-let socket = io("http://127.0.0.1:3000");
 let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
-const cartBTN = document.querySelector("#cart");
 let cartID = "";
 let isProcessing = false;
 
-//SOCKET EVENT LISTENERS
-socket.on("connect", () => {
-  console.log("New Server Connection", socket.id);
-})
-
-socket.on("failedUserAuth", (data) => {
-  alert(data)
-  //Include https:// otherwise appends URL onto current webpages url
-  window.open("https://www.google.com", "_blank")
-})
-
 //EVENT DELEGATION - handling browsers
 if (document.body.addEventListener) {
-  document.body.addEventListener('click', tapHandler, false);
+  document.body.addEventListener('click', makePurchase, false);
 }
 else {
-  document.body.attachEvent('onclick', tapHandler);//for IE
+  document.body.attachEvent('onclick', makePurchase);//for IE
 }
 
-async function tapHandler(e) {
+async function makePurchase(e) {
   e = e || window.event;//The Event itself
-  let target = e.target || e.srcElement; //The button itself
+  let target = e.target || e.srcElement; //The button itself  
+  
   if (target.className.match("tap_btn")) {
+    if(isProcessing && target.classList.contains("initialPurchase")){deleteCart();return}
+    if(isProcessing && !target.classList.contains("initialPurchase")){amendCart();return}
+    
+    //PURCHASE
+    isProcessing = true;
+    target.style.backgroundColor = "green"
+    target.classList.add("inCart")
+    target.classList.add("initalPurchase")
 
     socket.on("cartID", (data) => {
       cartID = data;
       console.log("CARTID", cartID);
     })
 
-    socket.on("retailerError", (data) => {
-      alert(data);
-    })
-
-    socket.on("customerAuthError", (data) => {
-      alert(data);
-      window.open("https://www.google.com", "_blank")
-    })
-
-    socket.on("orderComplete", (data) => {
-      console.log("order Completed", data);
-      isProcessing = false;
-      Array.from(document.querySelectorAll(".inCart")).map((btn)=>{
-        btn.style.backgroundColor = "red";
-        btn.classList.remove("inCart")
-      })      
-    })
-
-    socket.on("timerStarted", (data) => {
-      console.log("timer started", data);
-    })
-
-    socket.on("deletingCart", (data) => {
-      console.log("deleting cart...", data);
-    })
-
-    socket.on("timerStopped", (data) => {
-      console.log("timer:", data);
-    })
-
-    socket.on("cartDeleted", (data) => {
-      console.log("Deleted...", data);
-      Array.from(document.querySelectorAll(".inCart")).map((btn)=>{
-        btn.style.backgroundColor = "red";
-        btn.classList.remove("inCart")
-      })  
-    })
-
-    socket.on("deleteError", (data) => {
-      console.log("ERROR...", data);
-    })
-
-    socket.on("disconnectWS", (data) => {
-      console.log("Disconnecting...", data);
-      socket.disconnect();
-      socket = null
-      socket = io("http://127.0.0.1:3000");
-      socket.connect();
-    })
-
-    if (isProcessing && target.classList.contains("inCart")) {
-      console.log("Amend Hit");
-      //AMEND
-      target.style.backgroundColor = "green";
-      target.classList.add("inCart")
-      socket.on("cartAmended", (data) => {
-        console.log("Order Amended...", data);
-      })
-    
-      socket.on("cartAmendEror", (data) => {
-        console.log("Order Error...", data);
-      })
-    
-      socket.on("newCart", (data) => {
-        console.log("new cart...", data);
-      })
-    
-      socket.on("timerStopped", (data) => {
-        console.log("timer:", data);
-      })
-    
-      socket.on("orderComplete", (data) => {
-        console.log("order Completed", data);
-      })
-    
-      socket.on("responseIncoming", (data) => {
-        console.log("Response...", data);
-      })
-    
-      socket.on("disconnectWS", (data) => {
-        console.log("Disconnecting...", data);
-        socket.disconnect();
-        socket = null
-        socket = io("http://127.0.0.1:3000");
-        socket.connect();
-      })
-    
-      await axios.put("http://127.0.0.1:3000/api/v1/cart", {
-        fingerprint: fingerprint,
-        cartID: cartID,
-        userID: userID,
-        products: [
-          {
-            productID: 573901,
-            quantity: 2
-          }
-        ]
-      }, { withCredentials: true })
-        .then(response => {
-          console.log("Order Complete", response.data)
-          document.querySelector("div").innerHTML = response.data;
-        })
-        .catch(err => console.log(err))
-    } 
-    else if(isProcessing && !target.classList.contains("inCart")){
-      console.log("Delete - HIT from TAP");
-      //DELETE    
-      isProcessing = false;
-      await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
-        data: {
-          cartID: cartID,
-          userID: userID,
+    await axios.post("http://127.0.0.1:3000/api/v1/cart", {
+      fingerprint: fingerprint,
+      products: [
+        {
+          productID: 573901,
+          quantity: 2
+        },
+        {
+          productID: 573901,
+          quantity: 2
+        },
+        {
+          productID: 573901,
+          quantity: 2
         }
+      ]
+    }, { withCredentials: true })
+      .then(response => {
+        console.log("Order Complete", response.data)
+        document.querySelector("div").innerHTML = response.data;
       })
-        .then(response => {
-          console.log("DELETE RESPONSE", response)
-        })
-        .catch(err => console.log(err))
-      
-    }
-    else {
-      //PURCHASE
-      isProcessing = true;
-      target.style.backgroundColor = "green"
-      target.classList.add("inCart")
-      await axios.post("http://127.0.0.1:3000/api/v1/cart", {
-        fingerprint: fingerprint,
-        products: [
-          {
-            productID: 573901,
-            quantity: 2
-          },
-          {
-            productID: 573901,
-            quantity: 2
-          },
-          {
-            productID: 573901,
-            quantity: 2
-          }
-        ]
-      }, { withCredentials: true })
-        .then(response => {
-          console.log("Order Complete", response.data)
-          document.querySelector("div").innerHTML = response.data;
-        })
-        .catch(err => console.log(err))
-    }
+      .catch(err => console.log(err))
   }
 }
+
+async function amendCart() {
+  //AMEND
+    console.log("Amend Hit");
+    //AMEND
+    target.style.backgroundColor = "green";
+    target.classList.add("inCart")
+
+    await axios.put("http://127.0.0.1:3000/api/v1/cart", {
+      fingerprint: fingerprint,
+      cartID: cartID,
+      userID: userID,
+      products: [
+        {
+          productID: 573901,
+          quantity: 2
+        }
+      ]
+    }, { withCredentials: true })
+      .then(response => {
+        console.log("Order Complete", response.data)
+        document.querySelector("div").innerHTML = response.data;
+      })
+      .catch(err => console.log(err))
+  }
+
+async function deleteCart() {
+  //DELETE  
+    console.log("Delete - HIT from TAP");
+
+    isProcessing = false;
+    await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
+      data: {
+        cartID: cartID,
+        userID: userID,
+      }
+    })
+      .then(response => {
+        console.log("DELETE RESPONSE", response)
+      })
+      .catch(err => console.log(err))
+
+  }
+
 
 //PAGE EVENT LISTENERS
 //simulating logging and cookie being loaded into browser*********************************
@@ -198,9 +112,4 @@ function play() {
   var audio = document.getElementById("audio");
   audio.play();
 }
-
-
-
-
-
 
