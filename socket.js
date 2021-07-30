@@ -1,4 +1,4 @@
-const socket = io("http://127.0.0.1:3000");
+let socket = io("http://127.0.0.1:3000");
 
 //SOCKET EVENT LISTENERS
 socket.on("connect", () => {
@@ -10,7 +10,6 @@ socket.on("connect", () => {
     //Include https:// otherwise appends URL onto current webpages url
     window.open("https://www.google.com", "_blank")
   })
-
   
   socket.on("retailerError", (data) => {
     alert(data);

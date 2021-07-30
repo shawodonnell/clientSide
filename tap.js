@@ -16,14 +16,14 @@ async function makePurchase(e) {
   let target = e.target || e.srcElement; //The button itself  
   
   if (target.className.match("tap_btn")) {
-    if(isProcessing && target.classList.contains("initialPurchase")){deleteCart();return}
-    if(isProcessing && !target.classList.contains("initialPurchase")){amendCart();return}
+    if(isProcessing && target.classList.contains("initialPurchase")){deleteCart(target);return}
+    if(isProcessing && !target.classList.contains("initialPurchase")){amendCart(target);return}
     
     //PURCHASE
     isProcessing = true;
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
-    target.classList.add("initalPurchase")
+    target.classList.add("initialPurchase")
 
     socket.on("cartID", (data) => {
       cartID = data;
