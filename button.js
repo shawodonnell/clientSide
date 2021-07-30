@@ -55,9 +55,7 @@ function byAncestor(node, previousCount = 0) {
         }
     } catch (error) {
         console.log(error);
-    } finally {
-        continue
-    }
+    } 
 
     //filter childnodes
     if (node.localName !== 'main' || node.nodeName !== "main") {
