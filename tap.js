@@ -32,19 +32,19 @@ socket.on("failedUserAuth", (data) => {
 
 socket.on("retailerError", (data) => {
   alert(data);
-  resetStyle()
+  resetElements()
 })
 
 socket.on("customerAuthError", (data) => {
   alert(data);
   window.open("https://www.google.com", "_blank")
-  resetStyle()
+  resetElements()
 })
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed", data);
   isProcessing = false;
-  resetStyle()  
+  resetElements()  
 })
 
 socket.on("timerStarted", (data) => {
@@ -89,14 +89,12 @@ socket.on("timerStopped", (data) => {
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed", data);
-  resetStyle();
+  resetElements();
 })
 
 socket.on("responseIncoming", (data) => {
   console.log("Response...", data);
 })
-
-
 
 //EVENT DELEGATION - handling browsers
 if (document.body.addEventListener) {
@@ -139,7 +137,7 @@ async function makePurchase(e) {
     }, { withCredentials: true })
       .then(response => {
         console.log("Order Complete", response.data)
-        document.querySelector("div").innerHTML = response.data;
+        receipt(response.data)
       })
       .catch(err => console.log(err))
   }
@@ -193,15 +191,6 @@ async function deleteCart() {
 
 }
 
-
-//PAGE EVENT LISTENERS
-//simulating logging and cookie being loaded into browser*********************************
-document.querySelector("#cookie").addEventListener("click", async () => {
-  let url = `http://127.0.0.1:3000/api/v1/users/${userID}`;
-
-  await axios.get(url, { withCredentials: true }).then(response => console.log(response))
-})
-
 //FUNCTIONS
 function play() {
   var audio = document.getElementById("audio");
@@ -213,12 +202,27 @@ async function reconnectSocket() {
   console.log("New Server Connection", socket.id);
 }
 
-window.addEventListener("load", reconnectSocket)
-
-function resetStyle(){
+function resetElements(){
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
     btn.style.backgroundColor = "red";
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
   })
 }
+
+function receipt(data){
+  const div = document.querySelector(".receipt");
+  div.innerHTML(data.name,data.dataOrdered,data.items.toString(),data.price)
+  
+}
+
+//PAGE EVENT LISTENERS
+//simulating logging and cookie being loaded into browser*********************************
+document.querySelector("#cookie").addEventListener("click", async () => {
+  let url = `http://127.0.0.1:3000/api/v1/users/${userID}`;
+
+  await axios.get(url, { withCredentials: true }).then(response => console.log(response))
+})
+
+window.addEventListener("load", reconnectSocket)
+
