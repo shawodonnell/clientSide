@@ -22,6 +22,10 @@ socket.on("connect", () => {
     console.log(data);
     reconnectSocket()
   })
+
+socket.on("disconnect",()=>{
+  console.log("DISCONNECTING...........");
+})
   
   socket.on("failedUserAuth", (data) => {
     alert(data)
