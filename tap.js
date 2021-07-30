@@ -3,10 +3,11 @@ let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
 let socket = io("http://127.0.0.1:3000",{
+  forceNew:true,
   reconnection:false,
   autoConnect:false
 });
-reconnectSocket();
+// reconnectSocket();
 //SOCKET EVENT LISTENERS
 
 socket.on("cartID", (data) => {
@@ -25,6 +26,7 @@ socket.on("connect", () => {
 
 socket.on("disconnect",()=>{
   console.log("DISCONNECTING...........");
+  reconnectSocket()
 })
   
   socket.on("failedUserAuth", (data) => {
