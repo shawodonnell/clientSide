@@ -32,21 +32,19 @@ socket.on("failedUserAuth", (data) => {
 
 socket.on("retailerError", (data) => {
   alert(data);
+  resetStyle()
 })
 
 socket.on("customerAuthError", (data) => {
   alert(data);
   window.open("https://www.google.com", "_blank")
+  resetStyle()
 })
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed", data);
   isProcessing = false;
-  Array.from(document.querySelectorAll(".inCart")).map((btn) => {
-    btn.style.backgroundColor = "red";
-    btn.classList.remove("initialPurchase")
-    btn.classList.remove("inCart")
-  })
+  resetStyle()  
 })
 
 socket.on("timerStarted", (data) => {
@@ -91,6 +89,7 @@ socket.on("timerStopped", (data) => {
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed", data);
+  resetStyle();
 })
 
 socket.on("responseIncoming", (data) => {
@@ -112,7 +111,7 @@ async function makePurchase(e) {
   let target = e.target || e.srcElement; //The button itself  
 
   if (target.className.match("tap_btn")) {
-    if (isProcessing && target.classList.contains("initialPurchase")) { deleteCart(target); return }
+    if (isProcessing && target.classList.contains("inCart")) {deleteCart(target); return }
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE
@@ -215,3 +214,11 @@ async function reconnectSocket() {
 }
 
 window.addEventListener("load", reconnectSocket)
+
+function resetStyle(){
+  Array.from(document.querySelectorAll(".inCart")).map((btn) => {
+    btn.style.backgroundColor = "red";
+    btn.classList.remove("initialPurchase")
+    btn.classList.remove("inCart")
+  })
+}
