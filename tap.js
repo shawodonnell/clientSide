@@ -6,7 +6,7 @@ let socket = io("http://127.0.0.1:3000",{
   reconnection:false,
   autoConnect:false
 });
-
+reconnectSocket();
 //SOCKET EVENT LISTENERS
 
 socket.on("cartID", (data) => {
@@ -148,7 +148,6 @@ async function makePurchase(e) {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
-        reconnectSocket()
       })
       .catch(err => console.log(err))
   }
@@ -175,7 +174,6 @@ async function amendCart(target) {
       .then(response => {
         console.log("Order Complete", response.data)
         document.querySelector("div").innerHTML = response.data;
-        reconnectSocket()
       })
       .catch(err => console.log(err))
   }
@@ -198,7 +196,6 @@ async function deleteCart() {
       .then(response => {
         console.log("DELETE RESPONSE", response)
         cartID = "";
-        reconnectSocket()
       })
       .catch(err => console.log(err))
 
