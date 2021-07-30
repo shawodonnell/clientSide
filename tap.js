@@ -228,4 +228,4 @@ async function reconnectSocket(){
     console.log("New Server Connection 2", socket.id);
 }
 
-document.addEventListener("load",reconnectSocket)
+window.addEventListener("load",reconnectSocket)
