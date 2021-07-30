@@ -45,19 +45,12 @@ function byLength(results) {
 
 //FILTER ARRAY by childNode Length
 function byAncestor(node, previousCount = 0) {
-
+try {
     let currentCount = node.childNodes.length;
-
-    try {
-        //recursive killer
-        if (node.parentElement.localName === 'main' || node.parentElement.nodeName === "main") {
-            return
-        }
-    } catch (error) {
-        console.log(error);
-    } 
-
-    //filter childnodes
+    //recursive killer
+    if (node.parentElement.localName === 'main' || node.parentElement.nodeName === "main") {
+        return
+    }
     if (node.localName !== 'main' || node.nodeName !== "main") {
         if (currentCount > previousCount) {
             let className = node.className;
@@ -69,6 +62,10 @@ function byAncestor(node, previousCount = 0) {
         byAncestor(node.parentElement, currentCount)
 
     }
+    
+} catch (error) {
+    console.log(error);
+}    
 }
 
 function byChildNodes(array) {
