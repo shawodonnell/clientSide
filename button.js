@@ -100,8 +100,7 @@ function insertButtons(results){
 
 }
 
-window.addEventListener('load',start);
-
+document.onload(start);
 /*ARCHIVE
 
 //Traverse Ancestors
