@@ -7,7 +7,6 @@ let socket = io("http://127.0.0.1:3000",{
   reconnection:false,
   autoConnect:false
 });
-// reconnectSocket();
 //SOCKET EVENT LISTENERS
 
 socket.on("cartID", (data) => {
@@ -228,3 +227,5 @@ async function reconnectSocket(){
     socket.open();
     console.log("New Server Connection 2", socket.id);
 }
+
+document.addEventListener("load",reconnectSocket)
