@@ -25,9 +25,9 @@ else {
 }
 
 async function tapHandler(e) {
-  e = e || window.event;
+  e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself
-
+  e.preventDefault();
   if (target.className.match("tap_btn")) {
 
     socket.on("cartID", (data) => {
@@ -47,8 +47,10 @@ async function tapHandler(e) {
     socket.on("orderComplete", (data) => {
       console.log("order Completed", data);
       isProcessing = false;
-      target.style.backgroundColor = "red"
-      target.classList.remove("triggerBtn")
+      Array.from(document.querySelectorAll(".triggerBtn")).map((btn)=>{
+        btn.style.backgroundColor = "red";
+        btn.classList.remove("triggerBtn")
+      })      
     })
 
     socket.on("timerStarted", (data) => {
@@ -65,6 +67,10 @@ async function tapHandler(e) {
 
     socket.on("cartDeleted", (data) => {
       console.log("Deleted...", data);
+      Array.from(document.querySelectorAll(".triggerBtn")).map((btn)=>{
+        btn.style.backgroundColor = "red";
+        btn.classList.remove("triggerBtn")
+      })  
     })
 
     socket.on("deleteError", (data) => {
@@ -82,9 +88,8 @@ async function tapHandler(e) {
     if (isProcessing && target.classList.contains("triggerBtn")) {
       console.log("Delete - HIT from TAP");
       //DELETE    
+      e.stopImmediatePropagation();
       isProcessing = false;
-      target.style.backgroundColor = "red"
-      target.classList.remove("triggerBtn")
       await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
         data: {
           cartID: cartID,
@@ -98,6 +103,9 @@ async function tapHandler(e) {
     } 
     else if(isProcessing && !target.classList.contains("triggerBtn")){
       //AMEND
+      e.stopImmediatePropagation();
+      target.style.backgroundColor = "green";
+      target.classList.add("triggerBtn")
       socket.on("cartAmended", (data) => {
         console.log("Order Amended...", data);
       })
