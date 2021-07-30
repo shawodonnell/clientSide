@@ -2,7 +2,7 @@
 //let results = document.evaluate(`//text()[contains(.,\'£\')]/ancestor::*[self::${ancestor}]`,document.body,null,XPathResult.ORDERED_NODE_ITERATOR_TYPE,null)
 resultsArray = [];
 
-let results = document.evaluate(`//text()[contains(.,\'£\')]`,document.body,null,XPathResult.ORDERED_NODE_ITERATOR_TYPE,null)
+let results = document.evaluate(`//text()[contains(.,\'£\')]`,document.body,null,XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,null)
 console.log("XPATH",results);
 
 function start(){
