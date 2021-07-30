@@ -3,11 +3,14 @@
 resultsArray = [];
 
 let results = document.evaluate(`//text()[contains(.,\'£\')]`,document.body,null,XPathResult.ORDERED_NODE_ITERATOR_TYPE,null)
+console.log("XPATH",results);
 
 function start(){
     results = toArray(results);
+    console.log("ARRAY",results);
     results = byLength(results);
-    results = byAncestor(results[10]);
+    console.log("LENGTH",results);
+    results = byAncestor(results[0]);
     results = byChildNodes(resultsArray)
     console.log(results);
     insertButtons(results);
