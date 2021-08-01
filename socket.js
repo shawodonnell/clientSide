@@ -67,7 +67,6 @@ socket.on("deleteError", (data) => {
   resetElements();
 })
 
-
 socket.on("cartAmended", (data) => {
   console.log("Order Amended...", data);
 })

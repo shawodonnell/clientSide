@@ -17,7 +17,7 @@ async function makePurchase(e) {
   let target = e.target || e.srcElement; //The button itself  
 
   if (target.className.match("tap_btn")) {
-    if (isProcessing && target.classList.contains("inCart")) {deleteCart(target); return }
+    if (isProcessing && target.classList.contains("inCart")) { deleteCart(target); return }
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
@@ -75,11 +75,12 @@ async function amendCart(target) {
 }
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
-async function deleteCart() {
+async function deleteCart(target) {
 
   if (!cartID) {
     return
   }
+  target.disabled = true;
 
   isProcessing = false;
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
@@ -92,7 +93,11 @@ async function deleteCart() {
       console.log("DELETE RESPONSE", response)
       cartID = "";
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err);
+    })
+  target.disabled = false;
+
 
 }
 
@@ -102,7 +107,7 @@ function play() {
   audio.play();
 }
 
-function resetElements(){
+function resetElements() {
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
     btn.style.backgroundColor = "red";
     btn.classList.remove("initialPurchase")
@@ -110,9 +115,9 @@ function resetElements(){
   })
 }
 
-function receipt(data){
+function receipt(data) {
   const div = document.querySelector(".receipt");
-  receiptData = {name:data.name,date:data.dataOrdered,items:data.items.toString(),price:data.price}
+  receiptData = { name: data.name, date: data.dataOrdered, items: data.items.toString(), price: data.price }
   div.innerHTML = receiptData
 }
 
