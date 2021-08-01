@@ -2,99 +2,6 @@ let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
-let socket = io("http://127.0.0.1:3000", {
-  forceNew: true,
-  reconnection: false,
-  autoConnect: false
-});
-//SOCKET EVENT LISTENERS
-
-socket.on("cartID", (data) => {
-  cartID = data;
-  console.log("CARTID", cartID);
-})
-
-socket.on("newConnect", (data) => {
-  console.log(data);
-  reconnectSocket()
-})
-
-socket.on("disconnect", () => {
-  console.log("DISCONNECTING...........");
-  reconnectSocket()
-})
-
-socket.on("failedUserAuth", (data) => {
-  alert(data)
-  //Include https:// otherwise appends URL onto current webpages url
-  window.open("https://www.google.com", "_blank")
-})
-
-socket.on("retailerError", (data) => {
-  alert(data);
-  resetElements()
-})
-
-socket.on("customerAuthError", (data) => {
-  alert(data);
-  window.open("https://www.google.com", "_blank")
-  resetElements()
-})
-
-socket.on("orderComplete", (data) => {
-  console.log("order Completed", data);
-  isProcessing = false;
-  resetElements()  
-})
-
-socket.on("timerStarted", (data) => {
-  console.log("timer started", data);
-})
-
-socket.on("deletingCart", (data) => {
-  console.log("deleting cart...", data);
-})
-
-socket.on("timerStopped", (data) => {
-  console.log("timer:", data);
-})
-
-socket.on("cartDeleted", (data) => {
-  console.log("Deleted...", data);
-  Array.from(document.querySelectorAll(".inCart")).map((btn) => {
-    btn.style.backgroundColor = "red";
-    btn.classList.remove("inCart")
-  })
-})
-
-socket.on("deleteError", (data) => {
-  console.log("ERROR...", data);
-})
-
-socket.on("cartAmended", (data) => {
-  console.log("Order Amended...", data);
-})
-
-socket.on("cartAmendEror", (data) => {
-  console.log("Order Error...", data);
-})
-
-socket.on("newCart", (data) => {
-  console.log("new cart...", data);
-})
-
-socket.on("timerStopped", (data) => {
-  console.log("timer:", data);
-})
-
-socket.on("orderComplete", (data) => {
-  console.log("order Completed", data);
-  resetElements();
-})
-
-socket.on("responseIncoming", (data) => {
-  console.log("Response...", data);
-})
 
 //EVENT DELEGATION - handling browsers
 if (document.body.addEventListener) {
@@ -104,6 +11,7 @@ else {
   document.body.attachEvent('onclick', makePurchase);//for IE
 }
 
+//MAIN CART FUNCTION
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself  
@@ -112,7 +20,7 @@ async function makePurchase(e) {
     if (isProcessing && target.classList.contains("inCart")) {deleteCart(target); return }
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
-    //PURCHASE
+    //PURCHASE ITEMS / START NEW CART
     isProcessing = true;
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
@@ -143,10 +51,8 @@ async function makePurchase(e) {
   }
 }
 
+//AMENDING CART
 async function amendCart(target) {
-  //AMEND
-  console.log("Amend Hit");
-  //AMEND
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
 
@@ -168,9 +74,8 @@ async function amendCart(target) {
     .catch(err => console.log(err))
 }
 
+//DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
 async function deleteCart() {
-  //DELETE  
-  console.log("Delete - HIT from TAP");
 
   if (!cartID) {
     return
@@ -191,15 +96,10 @@ async function deleteCart() {
 
 }
 
-//FUNCTIONS
+//TAP FUNCTIONS
 function play() {
   var audio = document.getElementById("audio");
   audio.play();
-}
-
-async function reconnectSocket() {
-  socket.open();
-  console.log("New Server Connection", socket.id);
 }
 
 function resetElements(){

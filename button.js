@@ -18,7 +18,6 @@ function start() {
     insertButtons(results);
 }
 
-
 //FUNCTIONS******************************************
 //Change XPATH to Array
 function toArray(results) {
