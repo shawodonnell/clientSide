@@ -17,7 +17,7 @@ async function makePurchase(e) {
   let target = e.target || e.srcElement; //The button itself  
 
   if (target.className.match("tap_btn")) {
-    if (isProcessing && target.classList.contains("inCart")) { deleteCart(target); return }
+    if (isProcessing && target.classList.contains("inCart")) { target.disabled = true, deleteCart(target); return }
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
@@ -80,8 +80,6 @@ async function deleteCart(target) {
   if (!cartID) {
     return
   }
-  target.disabled = true;
-
   isProcessing = false;
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
@@ -97,8 +95,6 @@ async function deleteCart(target) {
       console.log(err);
     })
   target.disabled = false;
-
-
 }
 
 //TAP FUNCTIONS
