@@ -69,7 +69,7 @@ async function amendCart(target) {
   }, { withCredentials: true })
     .then(response => {
       console.log("Order Complete", response.data)
-      document.querySelector("div").innerHTML = response.data;
+      receipt(response.data)
     })
     .catch(err => console.log(err))
 }

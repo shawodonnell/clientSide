@@ -58,10 +58,7 @@ socket.on("timerStopped", (data) => {
 
 socket.on("cartDeleted", (data) => {
   console.log("Deleted...", data);
-  Array.from(document.querySelectorAll(".inCart")).map((btn) => {
-    btn.style.backgroundColor = "red";
-    btn.classList.remove("inCart")
-  })
+  resetElements()
 })
 
 socket.on("deleteError", (data) => {
