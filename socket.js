@@ -1,16 +1,12 @@
 let socket = io("http://127.0.0.1:3000", {
   forceNew: true,
   reconnection: false,
-  autoConnect: false
+  autoConnect: false,
+  timeout:5000,
+
 });
 
-//SOCKET EVENT LISTENERS
-
-socket.on("cartID", (data) => {
-  cartID = data;
-  console.log("CARTID", cartID);
-})
-
+//CONNECTION TO SERVER - LISTENERS
 socket.on("newConnect", (data) => {
   console.log(data);
   reconnectSocket()
@@ -20,6 +16,13 @@ socket.on("disconnect", () => {
   console.log("DISCONNECTING...........");
   reconnectSocket()
 })
+
+socket.on("reconnect_failed", ()=>{
+  console.log("FAILED TO RECONNECT TO SERVER");
+  resetElements();
+})
+
+//AUTHENICATING RETAILER AND USER - LISTENERS
 
 socket.on("failedUserAuth", (data) => {
   alert(data)
@@ -39,22 +42,16 @@ socket.on("customerAuthError", (data) => {
   resetElements()
 })
 
-socket.on("orderComplete", (data) => {
-  console.log("order Completed", data);
-  isProcessing = false;
-  resetElements()  
+//PURCHASING ITEMS - LISTENERS
+socket.on("cartID", (data) => {
+  cartID = data;
+  console.log("CARTID", cartID);
 })
 
-socket.on("timerStarted", (data) => {
-  console.log("timer started", data);
-})
+//DELETING CART - LISTENERS
 
 socket.on("deletingCart", (data) => {
   console.log("deleting cart...", data);
-})
-
-socket.on("timerStopped", (data) => {
-  console.log("timer:", data);
 })
 
 socket.on("cartDeleted", (data) => {
@@ -66,6 +63,8 @@ socket.on("deleteError", (data) => {
   console.log("ERROR...", data);
   resetElements();
 })
+
+//AMENDING CART - LISTENERS
 
 socket.on("cartAmended", (data) => {
   console.log("Order Amended...", data);
@@ -79,13 +78,20 @@ socket.on("newCart", (data) => {
   console.log("new cart...", data);
 })
 
-socket.on("timerStopped", (data) => {
-  console.log("timer:", data);
-})
+//GENERAL CART RESPONSES - LISTENERS 
 
 socket.on("orderComplete", (data) => {
-  console.log("order Completed", data);
-  resetElements();
+  console.log("order Completed...", data);
+  isProcessing = false;
+  resetElements()  
+})
+
+socket.on("timerStarted", (data) => {
+  console.log("timer started", data);
+})
+
+socket.on("timerStopped", (data) => {
+  console.log("timer:", data);
 })
 
 socket.on("responseIncoming", (data) => {
