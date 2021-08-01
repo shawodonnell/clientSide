@@ -25,6 +25,7 @@ socket.on("failedUserAuth", (data) => {
   alert(data)
   //Include https:// otherwise appends URL onto current webpages url
   window.open("https://www.google.com", "_blank")
+  resetElements();
 })
 
 socket.on("retailerError", (data) => {
@@ -63,7 +64,9 @@ socket.on("cartDeleted", (data) => {
 
 socket.on("deleteError", (data) => {
   console.log("ERROR...", data);
+  resetElements();
 })
+
 
 socket.on("cartAmended", (data) => {
   console.log("Order Amended...", data);
