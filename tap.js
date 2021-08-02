@@ -8,7 +8,6 @@ let socket = io("http://127.0.0.1:3000", {
   reconnection: false,
   autoConnect: false,
   timeout:5000,
-
 });
 
 //CONNECTION TO SERVER - LISTENERS
@@ -183,7 +182,9 @@ async function deleteCart(target) {
   if (!cartID) {
     return
   }
-  isProcessing = false;
+
+  setTimeout(() => {
+    isProcessing = false;
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
       cartID: cartID,
@@ -196,7 +197,8 @@ async function deleteCart(target) {
     })
     .catch(err => {
       console.log(err);
-    })
+    })    
+  }, 5000);  
 }
 
 //TAP FUNCTIONS
