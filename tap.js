@@ -107,11 +107,9 @@ async function reconnectSocket() {
 //EVENT DELEGATION - handling browsers
 
   if (document.body.addEventListener) {
-    eventRunning = true;
     document.body.addEventListener('click', makePurchase, false);
   }
   else {
-    eventRunning = true;
     document.body.attachEvent('onclick', makePurchase);//for IE
   }
 
@@ -154,7 +152,6 @@ async function makePurchase(e) {
       })
       .catch(err => console.log(err))
   }//END OF IF
-  eventRunning = false
 }//END OF FUNCTION
 
 //AMENDING CART
@@ -178,7 +175,6 @@ async function amendCart(target) {
       receipt(response.data)
     })
     .catch(err => console.log(err))
-    eventRunning = false
 }
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
@@ -202,7 +198,6 @@ async function deleteCart(target) {
       console.log(err);
     })
   target.disabled = false;
-  eventRunning = false
 }
 
 //TAP FUNCTIONS
