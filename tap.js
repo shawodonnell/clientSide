@@ -80,7 +80,6 @@ socket.on("newCart", (data) => {
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed...", data);
-  isProcessing = false;
   resetElements()  
 })
 
@@ -130,7 +129,10 @@ async function makePurchase(e) {
       return      
     }
     if (isProcessing && !target.classList.contains("initialPurchase")) { 
-      amendCart(target); 
+      target.disabled = true;
+      setTimeout(() => {
+        amendCart(target); 
+      }, 1500);      
       return 
     }
 
