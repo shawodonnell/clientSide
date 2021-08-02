@@ -5,7 +5,7 @@ let isProcessing = false;
 let eventRunning = false;
 
 //EVENT DELEGATION - handling browsers
-if(!eventRunningRunning){
+if(!eventRunning){
   if (document.body.addEventListener) {
     eventRunning = true;
     document.body.addEventListener('click', makePurchase, false);
