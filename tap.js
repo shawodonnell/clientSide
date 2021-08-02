@@ -123,6 +123,7 @@ async function makePurchase(e) {
     //DELETE FILTERING
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true; 
+      target.style.backgroundColor = "yellow";
       setTimeout(() => {
         deleteCart(target);       
       }, 1500);
@@ -200,7 +201,6 @@ async function deleteCart(target) {
   if (!cartID) {
     return
   }
-  target.style.backgroundColor = "yellow";
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
       cartID: cartID,
