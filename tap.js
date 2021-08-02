@@ -112,7 +112,6 @@ async function reconnectSocket() {
     document.body.attachEvent('onclick', makePurchase);//for IE
   }
 
-
 //MAIN CART FUNCTION
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
@@ -129,7 +128,7 @@ async function makePurchase(e) {
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
-    
+
     await axios.post("http://127.0.0.1:3000/api/v1/cart", {
       fingerprint: fingerprint,
       products: [
@@ -150,8 +149,12 @@ async function makePurchase(e) {
       .then(response => {
         console.log("Order Complete", response.data)
         receipt(response.data)
+        sleep(1100);
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err))//END OF AXIOS
+
+      
+      
   }//END OF IF
 }//END OF FUNCTION
 
@@ -222,6 +225,11 @@ function receipt(data) {
   const div = document.querySelector(".receipt");
   receiptData = { name: data.name, date: data.dataOrdered, items: data.items.toString(), price: data.price }
   div.innerHTML = receiptData
+}
+
+function sleep(ms) {
+  
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 //PAGE EVENT LISTENERS
