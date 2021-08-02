@@ -125,12 +125,16 @@ async function makePurchase(e) {
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
-    await sleep(5000);
+
     isProcessing = true;
-    target.style.backgroundColor = "green"
+    target.style.backgroundColor = "DarkGreen"
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
+    target.disabled = true;
 
+    setTimeout(async () => {
+    target.disabled = false;
+    target.style.backgroundColor = "green"
     await axios.post("http://127.0.0.1:3000/api/v1/cart", {
       fingerprint: fingerprint,
       products: [
@@ -153,6 +157,7 @@ async function makePurchase(e) {
         receipt(response.data)
       })
       .catch(err => console.log(err))//END OF AXIOS
+    }, 1500);    
      
   }//END OF IF
 }//END OF FUNCTION
