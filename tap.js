@@ -117,9 +117,11 @@ async function reconnectSocket() {
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself  
+  console.log("EVENT",e);
+  console.log("TARGET",target);
 
   if (target.className.match("tap_btn")) {
-    if (isProcessing && target.classList.contains("inCart")) { target.disabled = true, deleteCart(target); return }
+    if (isProcessing && target.classList.contains("inCart")) {target.disabled = true, deleteCart(target); return }
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
@@ -127,7 +129,7 @@ async function makePurchase(e) {
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
-
+    
     await axios.post("http://127.0.0.1:3000/api/v1/cart", {
       fingerprint: fingerprint,
       products: [
