@@ -87,6 +87,7 @@ socket.on("orderComplete", (data) => {
 
 socket.on("timerStarted", (data) => {
   console.log("timer started", data);
+
 })
 
 socket.on("timerStopped", (data) => {
@@ -124,6 +125,7 @@ async function makePurchase(e) {
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
+    sleep(1100);
     isProcessing = true;
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
@@ -147,14 +149,11 @@ async function makePurchase(e) {
       ]
     }, { withCredentials: true })
       .then(response => {
-        console.log("Order Complete", response.data)
+        console.log("Order Complete", response.data) //Stripe Reference
         receipt(response.data)
-        sleep(1100);
       })
       .catch(err => console.log(err))//END OF AXIOS
-
-      
-      
+     
   }//END OF IF
 }//END OF FUNCTION
 
@@ -228,7 +227,7 @@ function receipt(data) {
 }
 
 function sleep(ms) {
-  
+
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
