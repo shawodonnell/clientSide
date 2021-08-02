@@ -191,6 +191,7 @@ async function deleteCart(target) {
     return
   }
   isProcessing = false;
+  target.style.backgroundColor = "yellow";
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
       cartID: cartID,
@@ -198,13 +199,13 @@ async function deleteCart(target) {
     }
   })
     .then(response => {
-      console.log("DELETE RESPONSE", response)
+      
       cartID = "";
-      console.log("Delete time out...");
     setTimeout(() => {
+      target.style.backgroundColor = "blue";
       console.log("resetting elements after delete...");
       resetElements()
-    }, 2000); 
+    }, 5000); 
     })
     .catch(err => {
       console.log(err);
