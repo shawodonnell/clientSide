@@ -125,7 +125,7 @@ async function makePurchase(e) {
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
-    sleep(5000);
+    await sleep(5000);
     isProcessing = true;
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
@@ -223,9 +223,11 @@ function receipt(data) {
   div.innerHTML = receiptData
 }
 
-function sleep(ms) {
+async function sleep(ms) {
   console.log("starting sleep...");
-  return new Promise(resolve => setTimeout(resolve(console.log("Sleep finished...")), ms));
+  return setTimeout(() => {
+    
+  }, ms);
 }
 
 //PAGE EVENT LISTENERS
