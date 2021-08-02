@@ -5,7 +5,9 @@ let isProcessing = false;
 let eventRunning = false;
 
 //EVENT DELEGATION - handling browsers
-if(!eventRunningRunning){
+if(eventRunningRunning){
+  return
+} else {
   if (document.body.addEventListener) {
     eventRunning = true;
     document.body.addEventListener('click', makePurchase, false);
@@ -14,8 +16,6 @@ if(!eventRunningRunning){
     eventRunning = true;
     document.body.attachEvent('onclick', makePurchase);//for IE
   }
-} else {
-  return console.log("Event running. try again");
 }
 
 //MAIN CART FUNCTION
