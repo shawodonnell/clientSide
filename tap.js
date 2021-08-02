@@ -197,7 +197,6 @@ async function deleteCart(target) {
     .catch(err => {
       console.log(err);
     })
-  target.disabled = false;
 }
 
 //TAP FUNCTIONS
@@ -211,6 +210,7 @@ function resetElements() {
     btn.style.backgroundColor = "red";
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
+    btn.disabled = false;
   })
 }
 
