@@ -120,8 +120,18 @@ async function makePurchase(e) {
   console.log("TARGET",target);
 
   if (target.className.match("tap_btn")) {
-    if (isProcessing && target.classList.contains("inCart")) {target.disabled = true, deleteCart(target); return }
-    if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
+    //DELETE FILTERING
+    if (isProcessing && target.classList.contains("inCart")) {
+      target.disabled = true; 
+      setTimeout(() => {
+        deleteCart(target);       
+      }, 1500);
+      return      
+    }
+    if (isProcessing && !target.classList.contains("initialPurchase")) { 
+      amendCart(target); 
+      return 
+    }
 
     //PURCHASE ITEMS / START NEW CART
 
@@ -190,7 +200,6 @@ async function deleteCart(target) {
   if (!cartID) {
     return
   }
-  isProcessing = false;
   target.style.backgroundColor = "yellow";
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
@@ -199,13 +208,8 @@ async function deleteCart(target) {
     }
   })
     .then(response => {
-      
       cartID = "";
-    setTimeout(() => {
-      target.style.backgroundColor = "blue";
-      console.log("resetting elements after delete...");
-      resetElements()
-    }, 5000); 
+      resetElements();
     })
     .catch(err => {
       console.log(err);
@@ -224,6 +228,7 @@ function resetElements() {
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
     btn.disabled = false;
+    isProcessing = false;
   })
 }
 
