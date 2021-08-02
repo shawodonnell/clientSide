@@ -125,7 +125,7 @@ async function makePurchase(e) {
     if (isProcessing && !target.classList.contains("initialPurchase")) { amendCart(target); return }
 
     //PURCHASE ITEMS / START NEW CART
-    await sleep(5000);
+    sleep(5000);
     isProcessing = true;
     target.style.backgroundColor = "green"
     target.classList.add("inCart")
