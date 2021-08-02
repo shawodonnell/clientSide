@@ -2,7 +2,6 @@ let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
-let eventRunning = false;
 
 let socket = io("http://127.0.0.1:3000", {
   forceNew: true,
@@ -106,7 +105,7 @@ async function reconnectSocket() {
   }
 
 //EVENT DELEGATION - handling browsers
-if(!eventRunning){
+
   if (document.body.addEventListener) {
     eventRunning = true;
     document.body.addEventListener('click', makePurchase, false);
@@ -115,7 +114,7 @@ if(!eventRunning){
     eventRunning = true;
     document.body.attachEvent('onclick', makePurchase);//for IE
   }
-}
+
 
 //MAIN CART FUNCTION
 async function makePurchase(e) {
