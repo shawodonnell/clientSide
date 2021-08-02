@@ -2,13 +2,20 @@ let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
 let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
+let eventRunning = false;
 
 //EVENT DELEGATION - handling browsers
-if (document.body.addEventListener) {
-  document.body.addEventListener('click', makePurchase, false);
-}
-else {
-  document.body.attachEvent('onclick', makePurchase);//for IE
+if(!eventRunningRunning){
+  if (document.body.addEventListener) {
+    eventRunning = true;
+    document.body.addEventListener('click', makePurchase, false);
+  }
+  else {
+    eventRunning = true;
+    document.body.attachEvent('onclick', makePurchase);//for IE
+  }
+} else {
+  return
 }
 
 //MAIN CART FUNCTION
@@ -48,8 +55,9 @@ async function makePurchase(e) {
         receipt(response.data)
       })
       .catch(err => console.log(err))
-  }
-}
+  }//END OF IF
+  eventRunning = false
+}//END OF FUNCTION
 
 //AMENDING CART
 async function amendCart(target) {
@@ -72,6 +80,7 @@ async function amendCart(target) {
       receipt(response.data)
     })
     .catch(err => console.log(err))
+    eventRunning = false
 }
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
@@ -95,6 +104,7 @@ async function deleteCart(target) {
       console.log(err);
     })
   target.disabled = false;
+  eventRunning = false
 }
 
 //TAP FUNCTIONS
