@@ -200,13 +200,15 @@ async function deleteCart(target) {
     .then(response => {
       console.log("DELETE RESPONSE", response)
       cartID = "";
+      console.log("Delete time out...");
+    setTimeout(() => {
+      console.log("resetting elements after delete...");
+      resetElements()
+    }, 2000); 
     })
     .catch(err => {
       console.log(err);
-    })  
-    setTimeout(() => {
-      resetElements()
-    }, 3000); 
+    }) 
 }
 
 //TAP FUNCTIONS
