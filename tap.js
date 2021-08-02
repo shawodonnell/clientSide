@@ -15,7 +15,7 @@ if(!eventRunningRunning){
     document.body.attachEvent('onclick', makePurchase);//for IE
   }
 } else {
-  return
+  return console.log("Event running. try again");
 }
 
 //MAIN CART FUNCTION
