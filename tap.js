@@ -119,8 +119,9 @@ async function makePurchase(e) {
   console.log("EVENT",e);
   console.log("TARGET",target);
 
+  //TAP BUTTON FILTERING
   if (target.className.match("tap_btn")) {
-    //DELETE FILTERING
+    //DELETE FUNCTION FILTERING
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true; 
       target.style.backgroundColor = "yellow";
@@ -129,6 +130,7 @@ async function makePurchase(e) {
       }, 1500);
       return      
     }
+    //AMEND FUNCTION FILTERING
     if (isProcessing && !target.classList.contains("initialPurchase")) { 
       target.disabled = true;
       setTimeout(() => {
@@ -179,6 +181,7 @@ async function makePurchase(e) {
 async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
+  console.log(target.classList);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
     fingerprint: fingerprint,
