@@ -13,12 +13,13 @@ let socket = io("http://127.0.0.1:3000", {
 //CONNECTION TO SERVER - LISTENERS
 socket.on("newConnect", (data) => {
   console.log(data);
-  reconnectSocket()
+  socket.open();
+  console.log("New Server Connection", socket.id);
 })
 
 socket.on("disconnect", () => {
   console.log("DISCONNECTING...........");
-  reconnectSocket()
+  socket.open();
 })
 
 //AUTHENICATING RETAILER AND USER - LISTENERS
@@ -59,7 +60,7 @@ socket.on("cartDeleted", (data) => {
 
 socket.on("deleteError", (data) => {
   console.log("ERROR...", data);
-  resetElements();
+  // resetElements();
 })
 
 //AMENDING CART - LISTENERS
@@ -139,7 +140,7 @@ async function makePurchase(e) {
     //PURCHASE ITEMS / START NEW CART
 
     isProcessing = true;
-    target.style.backgroundColor = "DarkGreen"
+    target.style.backgroundColor = "black"
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
     target.disabled = true;
@@ -211,11 +212,12 @@ async function deleteCart(target) {
   })
     .then(response => {
       cartID = "";
-      resetElements();
+      //resetElements();
     })
     .catch(err => {
       console.log(err);
-    }) 
+    })
+    resetElements(); 
 }
 
 //TAP FUNCTIONS
