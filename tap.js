@@ -131,16 +131,16 @@ async function makePurchase(e) {
       return      
     }
     //AMEND FUNCTION FILTERING
-    if (isProcessing && !target.classList.contains("initialPurchase")) { 
+    if (isProcessing && target.classList.contains("initialPurchase")) { 
       target.disabled = true;
       setTimeout(() => {
+        target.disabled = false;
         amendCart(target); 
       }, 1500);      
       return 
     }
 
     //PURCHASE ITEMS / START NEW CART
-
     isProcessing = true;
     target.style.backgroundColor = "black"
     target.classList.add("inCart")
@@ -250,6 +250,18 @@ async function sleep(ms) {
   return setTimeout(() => {
     
   }, ms);
+}
+
+//Fingerprint Function
+function initFingerprintJS() {
+  const fpPromise = FingerprintJS.load()
+
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      fingerprint = result.visitorId
+      console.log("FingerPrint",fingerprint)
+    })
 }
 
 //PAGE EVENT LISTENERS

@@ -12,6 +12,12 @@
     <button id="cookie">Login</button>
 <div>
     <!-- trigger webhook TO server -->    
+    <div class="tap_tee">Retailer Product
+        <p class="description"></p>
+        <img src="" alt="">
+        <button class="tap_btn" onclick="play()">£0</button>
+    </div>
+
     <button class="tap_btn" onclick="play()">£1</button>
     <button class="tap_btn" onclick="play()">£2</button>
     <button class="tap_btn" onclick="play()">£3</button>
@@ -29,6 +35,7 @@
     <!-- fill in with clientjs link -->
     <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js" onload="initFingerprintJS()"></script>
     <script src="socket.js"></script>
     <!-- <script src="button.js"></script> -->
     <script src="tap.js"></script>
