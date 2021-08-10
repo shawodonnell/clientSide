@@ -131,9 +131,10 @@ async function makePurchase(e) {
       return      
     }
     //AMEND FUNCTION FILTERING
-    if (isProcessing && target.classList.contains("initialPurchase")) { 
-      //target.disabled = true;
+    if (isProcessing && !target.classList.contains("initialPurchase")) { 
+      target.disabled = true;
       setTimeout(() => {
+        target.disabled = false;
         amendCart(target); 
       }, 1500);      
       return 
