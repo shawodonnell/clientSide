@@ -1,4 +1,4 @@
-let fingerprint = "de4b27d8beca3167f9ec694d76aa5a35";
+let fingerprint = "";
 let userID = "60f85a5ecf06402d10247601"
 let cartID = "";
 let isProcessing = false;
@@ -132,9 +132,8 @@ async function makePurchase(e) {
     }
     //AMEND FUNCTION FILTERING
     if (isProcessing && target.classList.contains("initialPurchase")) { 
-      target.disabled = true;
+      //target.disabled = true;
       setTimeout(() => {
-        target.disabled = false;
         amendCart(target); 
       }, 1500);      
       return 
