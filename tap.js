@@ -272,5 +272,9 @@ document.querySelector("#cookie").addEventListener("click", async () => {
   await axios.get(url, { withCredentials: true }).then(response => console.log(response))
 })
 
-window.addEventListener("load", reconnectSocket)
+window.addEventListener("load", function(){
+  reconnectSocket();
+  initFingerprintJS();  
+})
+
 
