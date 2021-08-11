@@ -348,8 +348,10 @@ async function reconnectSocket() {
 }
 
 async function getPublicKey(){
-  await axios.get('http://127.0.0.1:3000/api/v1/users/publickey').then(response => publicKey = response.public).catch(err=>console.log(err))
-  console.log(publicKey);
+  await axios.get('http://127.0.0.1:3000/api/v1/users/publickey')
+  .then(response => console.log(response))
+  .catch(err=>console.log(err))
+  //console.log(publicKey);
 }
 
 //EVENT LISTENERS*****************************************************
