@@ -1,2 +1,4 @@
 node_modules
 _archive
+client.js
+socket.js

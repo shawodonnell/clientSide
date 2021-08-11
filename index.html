@@ -9,7 +9,10 @@
 </head>
 <body>
     <!-- Gets Cookie for auth -->
-    <button id="cookie">Login</button>
+    <button onclick="location.href = 'register.html'">Register New User</button>
+    <button onclick="location.href = 'login.html'">Login Existing User</button>
+    <button id="cookie">GET COOKIE</button>
+
 <div>
     <!-- trigger webhook TO server -->    
     <div class="tap_tee">Retailer Product
@@ -32,12 +35,11 @@
     </div>
 
 
-    <!-- fill in with clientjs link -->
     <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-    <script src="socket.js"></script>
-    <!-- <script src="button.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"></script>
     <script src="tap.js"></script>
+
 </body>
 </html>

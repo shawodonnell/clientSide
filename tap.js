@@ -1,13 +1,17 @@
-let fingerprint = "";
-let userID = "60f85a5ecf06402d10247601"
-let cartID = "";
+let fingerprint;
+let publicKey;
+let userID;// = "60f85a5ecf06402d10247601"
+let userEmail;
+let cartID;
 let isProcessing = false;
+
+//SOCKETS********************************************************
 
 let socket = io("http://127.0.0.1:3000", {
   forceNew: true,
   reconnection: false,
   autoConnect: false,
-  timeout:5000,
+  timeout: 5000,
 });
 
 //CONNECTION TO SERVER - LISTENERS
@@ -81,7 +85,7 @@ socket.on("newCart", (data) => {
 
 socket.on("orderComplete", (data) => {
   console.log("order Completed...", data);
-  resetElements()  
+  resetElements()
 })
 
 socket.on("timerStarted", (data) => {
@@ -97,47 +101,42 @@ socket.on("responseIncoming", (data) => {
   console.log("Response...", data);
 })
 
-//SOCKET FUNCTIONS
-async function reconnectSocket() {
-    socket.open();
-    console.log("New Server Connection", socket.id);
-  }
+//CART FUNCTIONS*********************************************************
 
 //EVENT DELEGATION - handling browsers
 
-  if (document.body.addEventListener) {
-    document.body.addEventListener('click', makePurchase, false);
-  }
-  else {
-    document.body.attachEvent('onclick', makePurchase);//for IE
-  }
+if (document.body.addEventListener) {
+  document.body.addEventListener('click', makePurchase, false);
+}
+else {
+  document.body.attachEvent('onclick', makePurchase);//for IE
+}
 
-//MAIN CART FUNCTION
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself  
-  console.log("EVENT",e);
-  console.log("TARGET",target);
+  console.log("EVENT", e);
+  console.log("TARGET", target);
 
   //TAP BUTTON FILTERING
   if (target.className.match("tap_btn")) {
     //DELETE FUNCTION FILTERING
     if (isProcessing && target.classList.contains("inCart")) {
-      target.disabled = true; 
+      target.disabled = true;
       target.style.backgroundColor = "yellow";
       setTimeout(() => {
-        deleteCart(target);       
+        deleteCart(target);
       }, 1500);
-      return      
+      return
     }
     //AMEND FUNCTION FILTERING
-    if (isProcessing && !target.classList.contains("initialPurchase")) { 
+    if (isProcessing && !target.classList.contains("initialPurchase")) {
       target.disabled = true;
       setTimeout(() => {
         target.disabled = false;
-        amendCart(target); 
-      }, 1500);      
-      return 
+        amendCart(target);
+      }, 1500);
+      return
     }
 
     //PURCHASE ITEMS / START NEW CART
@@ -148,32 +147,32 @@ async function makePurchase(e) {
     target.disabled = true;
 
     setTimeout(async () => {
-    target.disabled = false;
-    target.style.backgroundColor = "green"
-    await axios.post("http://127.0.0.1:3000/api/v1/cart", {
-      fingerprint: fingerprint,
-      products: [
-        {
-          productID: 573901,
-          quantity: 2
-        },
-        {
-          productID: 573901,
-          quantity: 2
-        },
-        {
-          productID: 573901,
-          quantity: 2
-        }
-      ]
-    }, { withCredentials: true })
-      .then(response => {
-        console.log("Order Complete", response.data) //Stripe Reference
-        receipt(response.data)
-      })
-      .catch(err => console.log(err))//END OF AXIOS
-    }, 1500);    
-     
+      target.disabled = false;
+      target.style.backgroundColor = "green"
+      await axios.post("http://127.0.0.1:3000/api/v1/cart", {
+        fingerprint: fingerprint,
+        products: [
+          {
+            productID: 573901,
+            quantity: 2
+          },
+          {
+            productID: 573901,
+            quantity: 2
+          },
+          {
+            productID: 573901,
+            quantity: 2
+          }
+        ]
+      }, { withCredentials: true })
+        .then(response => {
+          console.log("Order Complete", response.data) //Stripe Reference
+          receipt(response.data)
+        })
+        .catch(err => console.log(err))//END OF AXIOS
+    }, 1500);
+
   }//END OF IF
 }//END OF FUNCTION
 
@@ -220,10 +219,90 @@ async function deleteCart(target) {
     .catch(err => {
       console.log(err);
     })
-    resetElements(); 
+  resetElements();
 }
 
-//TAP FUNCTIONS
+//LOGIN FUNCTIONS***********************************************
+
+//New User Registering
+async function registerUser() {
+  console.log("Form Submitted");
+
+  if (!publicKey) {
+    throw new Error("Cannot contact server")
+  }
+
+  encryptPassword = sjcl.encrypt(regForm_password.value, publicKey);
+  encryptEmail = sjcl.encrypt(regForm_email.value, publicKey);
+  encryptCardNum = sjcl.encrypt(regForm_cardNumber.value, publicKey);
+  encryptCVC = sjcl.encrypt(regForm_cvc.value, publicKey);
+  encryptFingerprint = sjcl.encrypt(fingerprint, publicKey);
+
+  const user = {
+    firstName: regForm_firstName.value,
+    lastName: regForm_lastName.value,
+    email: encryptEmail,
+    password: encryptPassword,
+    phone: regForm_phone.value,
+    houseNumber: regForm_houseNumber.value,
+    houseStreet: regForm_houseStreet.value,
+    postCode: regForm_postCode.value,
+    city: regForm_city.value,
+    country: regForm_country.value,
+    fingerprint: encryptFingerprint,
+
+    cardType: regForm_cardType.value,
+    cardNumber: encryptCardNum,
+    expMonth: regForm_expMonth.value,
+    expYear: regForm_expYear.value,
+    cvc: encryptCVC,
+    cardBrand: regForm_cardBrand.value,
+
+    prefCategory: regForm_prefCategory.value,
+    prefSubCategory: regForm_prefSubCategory.value,
+    prefSize: regForm_prefSize.value,
+    prefColour: regForm_prefColour.value
+
+  }
+
+  if (!user) {
+    alert("Error with User Details")
+  }
+
+  await axios.post('http://127.0.0.1:3000/api/v1/users/register', {
+    user
+  })
+    .then(response => console.log("Log in Response:", response))
+    //SET USERID AND EMAIL
+    .catch(err => console.log(err))
+
+}
+
+//Existing User Login
+async function login() {
+  console.log("Logging in....");
+
+  if (!publicKey) {
+    throw new Error("Cannot contact server")
+  }
+
+  encryptPassword = sjcl.encrypt(loginForm_password.value, publicKey);
+  encryptEmail = sjcl.encrypt(loginForm_email.value, publicKey);
+  encryptFingerprint = sjcl.encrypt(fingerprint, publicKey);
+
+  await axios.post('http://127.0.0.1:3000/api/v1/users/login', {
+    email: encryptEmail,
+    password: encryptPassword,
+    fingerprint: encryptFingerprint
+  })
+    .then(response => console.log("Log in Response:", response))
+    //SET USERID AND EMAIL
+
+}
+
+//UTIL FUNCTIONS****************************************
+
+//TAP 
 function play() {
   var audio = document.getElementById("audio");
   audio.play();
@@ -248,11 +327,10 @@ function receipt(data) {
 async function sleep(ms) {
   console.log("starting sleep...");
   return setTimeout(() => {
-    
+
   }, ms);
 }
 
-//Fingerprint Function
 function initFingerprintJS() {
   const fpPromise = FingerprintJS.load()
 
@@ -260,21 +338,35 @@ function initFingerprintJS() {
     .then(fp => fp.get())
     .then(result => {
       fingerprint = result.visitorId
-      console.log("FingerPrint",fingerprint)
+      console.log("FingerPrint", fingerprint)
     })
 }
 
-//PAGE EVENT LISTENERS
-//simulating logging and cookie being loaded into browser*********************************
+async function reconnectSocket() {
+  socket.open();
+  console.log("New Server Connection", socket.id);
+}
+
+async function getPublicKey(){
+  await axios.get('http://127.0.0.1:3000/api/v1/users/publicKey').then(response => publicKey = response.public)
+}
+
+//EVENT LISTENERS*****************************************************
+
+//simulating logging and cookie being loaded into browser
 document.querySelector("#cookie").addEventListener("click", async () => {
   let url = `http://127.0.0.1:3000/api/v1/users/${userID}`;
 
   await axios.get(url, { withCredentials: true }).then(response => console.log(response))
 })
 
-window.addEventListener("load", function(){
-  reconnectSocket();
-  initFingerprintJS();  
+window.addEventListener("load", function () {
+  try {
+    reconnectSocket();
+    initFingerprintJS();
+    getPublicKey();
+  } catch (error) {
+    alert(error)
+  }
+  
 })
-
-

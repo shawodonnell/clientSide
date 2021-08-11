@@ -1,1 +1,61 @@
-<!-- webpack link -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta placeholder="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="POST" placeholder="register" id="regForm_register">
+        <!-- Customer Details -->
+        <input type="text" placeholder="firstName" id="regForm_firstName" required>
+        <input type="text" placeholder="lastName" id="regForm_lastName" required>
+        <input type="text" placeholder="email" id="regForm_email"  required >
+        <input type="text" placeholder="password" id="regForm_password" required >
+        <input type="text" placeholder="phone" id="regForm_phone" required >
+        <input type="text" placeholder="houseNumber" id="regForm_houseNumber" required >
+        <input type="text" placeholder="houseStreet" id="regForm_houseStreet" required >
+        <input type="text" placeholder="postCode" id="regForm_postCode" required >
+        <input type="text" placeholder="city" id="regForm_city" required >
+        <input type="text" placeholder="country" id="regForm_country" required >
+        <br>
+        <br>
+        <!-- Payment Details -->
+        <input type="text" placeholder="cardType" id="regForm_cardType" required >
+        <input type="text" placeholder="cardNumber" id="regForm_cardNumber" required >
+        <input type="text" placeholder="expMonth" id="regForm_expMonth" required >
+        <input type="text" placeholder="expYear" id="regForm_expYear" required >
+        <input type="text" placeholder="cvc" id="regForm_cvc" required >
+        <input type="text" placeholder="cardBrand" id="regForm_cardBrand" required >
+        <br>
+        <br>
+        <!-- Preference Details -->
+        <input type="text" placeholder="prefCategory" id="regForm_prefCategory" required >
+        <input type="text" placeholder="prefSubCategory" id="regForm_prefSubCategory" required >
+        <input type="text" placeholder="prefSize" id="regForm_prefSize" required >
+        <input type="text" placeholder="prefColour" id="regForm_prefColour" required >
+        <br>
+        <br>
+
+        <input type="submit" id="regForm_submit" value="Submit">
+
+
+    </form>
+    <script src="tap.js"></script>
+    <script>
+        document.querySelector('#regForm_register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                registerUser();
+            } catch (error) {
+                alert(error)
+            }
+        })
+    </script>
+
+</body>
+
+</html>
