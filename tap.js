@@ -1,5 +1,4 @@
 let fingerprint;
-let publicKey;
 let userID;// = "60f85a5ecf06402d10247601"
 let userEmail;
 let cartID;
@@ -228,35 +227,25 @@ async function deleteCart(target) {
 async function registerUser() {
   console.log("Form Submitted");
 
-  if (!publicKey) {
-    throw new Error("Cannot contact server")
-  }
-
-  encryptPassword = sjcl.encrypt(regForm_password.value, publicKey);
-  encryptEmail = sjcl.encrypt(regForm_email.value, publicKey);
-  encryptCardNum = sjcl.encrypt(regForm_cardNumber.value, publicKey, {"iter":1000},{});
-  encryptCVC = sjcl.encrypt(regForm_cvc.value, publicKey);
-  encryptFingerprint = sjcl.encrypt(fingerprint, publicKey);
-
   const user = {
     firstName: regForm_firstName.value,
     lastName: regForm_lastName.value,
-    email: encryptEmail,
-    password: encryptPassword,
+    email: regForm_email.value,
+    password: regForm_password.value,
     phone: regForm_phone.value,
     houseNumber: regForm_houseNumber.value,
     houseStreet: regForm_houseStreet.value,
     postCode: regForm_postCode.value,
     city: regForm_city.value,
     country: regForm_country.value,
-    fingerprint: encryptFingerprint,
+    fingerprint: fingerprint,
     payments: [
       {
         cardType: regForm_cardType.value,
-        cardNumber: encryptCardNum,
+        cardNumber: regForm_cardNumber.value,
         expMonth: regForm_expMonth.value,
         expYear: regForm_expYear.value,
-        cvc: encryptCVC,
+        cvc: regForm_cvc.value,
         cardBrand: regForm_cardBrand.value,
       }
     ],
@@ -268,6 +257,7 @@ async function registerUser() {
         prefColour: regForm_prefColour.value
       }
     ]
+
   }
 
   if (!user) {
@@ -351,21 +341,11 @@ async function reconnectSocket() {
   console.log("New Server Connection", socket.id);
 }
 
-async function getPublicKey() {
-  await axios.get('http://127.0.0.1:3000/api/v1/users/publickey')
-    .then(response => response.data)
-    .then(data => publicKey = data)
-    .catch(err => console.log(err))
-
-  console.log(publicKey);
-}
-
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
     reconnectSocket();
     initFingerprintJS();
-    getPublicKey();
   } catch (error) {
     alert(error)
   }
