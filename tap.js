@@ -234,7 +234,7 @@ async function registerUser() {
 
   encryptPassword = sjcl.encrypt(regForm_password.value, publicKey);
   encryptEmail = sjcl.encrypt(regForm_email.value, publicKey);
-  encryptCardNum = sjcl.encrypt(regForm_cardNumber.value, publicKey);
+  encryptCardNum = sjcl.encrypt(regForm_cardNumber.value, publicKey, {"iter":1000},{});
   encryptCVC = sjcl.encrypt(regForm_cvc.value, publicKey);
   encryptFingerprint = sjcl.encrypt(fingerprint, publicKey);
 
