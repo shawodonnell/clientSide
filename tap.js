@@ -250,19 +250,24 @@ async function registerUser() {
     city: regForm_city.value,
     country: regForm_country.value,
     fingerprint: encryptFingerprint,
-
-    cardType: regForm_cardType.value,
-    cardNumber: encryptCardNum,
-    expMonth: regForm_expMonth.value,
-    expYear: regForm_expYear.value,
-    cvc: encryptCVC,
-    cardBrand: regForm_cardBrand.value,
-
-    prefCategory: regForm_prefCategory.value,
-    prefSubCategory: regForm_prefSubCategory.value,
-    prefSize: regForm_prefSize.value,
-    prefColour: regForm_prefColour.value
-
+    payments: [
+      {
+        cardType: regForm_cardType.value,
+        cardNumber: encryptCardNum,
+        expMonth: regForm_expMonth.value,
+        expYear: regForm_expYear.value,
+        cvc: encryptCVC,
+        cardBrand: regForm_cardBrand.value,
+      }
+    ],
+    preferences: [
+      {
+        prefCategory: regForm_prefCategory.value,
+        prefSubCategory: regForm_prefSubCategory.value,
+        prefSize: regForm_prefSize.value,
+        prefColour: regForm_prefColour.value
+      }
+    ]
   }
 
   if (!user) {
@@ -296,7 +301,7 @@ async function login() {
     fingerprint: encryptFingerprint
   })
     .then(response => console.log("Log in Response:", response))
-    //SET USERID AND EMAIL
+  //SET USERID AND EMAIL
 
 }
 
@@ -333,7 +338,6 @@ async function sleep(ms) {
 
 function initFingerprintJS() {
   const fpPromise = FingerprintJS.load()
-
   fpPromise
     .then(fp => fp.get())
     .then(result => {
@@ -347,20 +351,16 @@ async function reconnectSocket() {
   console.log("New Server Connection", socket.id);
 }
 
-async function getPublicKey(){
+async function getPublicKey() {
   await axios.get('http://127.0.0.1:3000/api/v1/users/publickey')
-  .then(response => response.data)
-  .then(data=>publicKey=data)
-  .catch(err=>console.log(err))
-  
+    .then(response => response.data)
+    .then(data => publicKey = data)
+    .catch(err => console.log(err))
+
   console.log(publicKey);
 }
 
 //EVENT LISTENERS*****************************************************
-
-//simulating logging and cookie being loaded into browser
-
-
 window.addEventListener("load", function () {
   try {
     reconnectSocket();
@@ -369,5 +369,5 @@ window.addEventListener("load", function () {
   } catch (error) {
     alert(error)
   }
-  
+
 })
