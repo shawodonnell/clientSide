@@ -355,11 +355,7 @@ async function getPublicKey(){
 //EVENT LISTENERS*****************************************************
 
 //simulating logging and cookie being loaded into browser
-document.querySelector("#cookie").addEventListener("click", async () => {
-  let url = `http://127.0.0.1:3000/api/v1/users/${userID}`;
 
-  await axios.get(url, { withCredentials: true }).then(response => console.log(response))
-})
 
 window.addEventListener("load", function () {
   try {
