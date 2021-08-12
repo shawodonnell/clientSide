@@ -251,10 +251,10 @@ async function registerUser() {
     ],
     preferences: [
       {
-        prefCategory: regForm_prefCategory.value,
-        prefSubCategory: regForm_prefSubCategory.value,
-        prefSize: regForm_prefSize.value,
-        prefColour: regForm_prefColour.value
+        category: regForm_prefCategory.value,
+        subCategory: regForm_prefSubCategory.value,
+        size: regForm_prefSize.value,
+        colour: regForm_prefColour.value
       }
     ]
 
