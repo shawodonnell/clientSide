@@ -297,7 +297,7 @@ async function login() {
 function setCookie(token){
   console.log("TOKEN",token);
   let date = new Date(Date.now() + 900000);
-  document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1; Path=/;`
+  document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
   //document.cookie = "WhyteGoodMan"+"="+token+"; samesite=none"
   console.log("COOKIE",document.cookie);
 }
