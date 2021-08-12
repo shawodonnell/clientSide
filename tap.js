@@ -282,7 +282,10 @@ async function login() {
     password: loginForm_password.value,
     fingerprint: fingerprint
   })
-    .then(response => console.log("Log in Response:", response))
+    .then((response) => {
+      console.log("COOKIE",document.cookie);
+      console.log("Log in Response:", response)}
+      )
   //SET USERID AND EMAIL
 
 }
