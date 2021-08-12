@@ -1,5 +1,5 @@
 let fingerprint;
-let userID;// = "60f85a5ecf06402d10247601"
+let userID// = "60f85a5ecf06402d10247601"
 let userEmail;
 let cartID;
 let isProcessing = false;
@@ -276,19 +276,11 @@ async function registerUser() {
 //Existing User Login
 async function login() {
   console.log("Logging in....");
-
-  if (!publicKey) {
-    throw new Error("Cannot contact server")
-  }
-
-  encryptPassword = sjcl.encrypt(loginForm_password.value, publicKey);
-  encryptEmail = sjcl.encrypt(loginForm_email.value, publicKey);
-  encryptFingerprint = sjcl.encrypt(fingerprint, publicKey);
-
+  
   await axios.post('http://127.0.0.1:3000/api/v1/users/login', {
-    email: encryptEmail,
-    password: encryptPassword,
-    fingerprint: encryptFingerprint
+    email: loginForm_email.value,
+    password: loginForm_password.value,
+    fingerprint: fingerprint
   })
     .then(response => console.log("Log in Response:", response))
   //SET USERID AND EMAIL
