@@ -284,7 +284,7 @@ async function login() {
   })
     .then((response) => {
       console.log("Log in Response:", response)
-      setCookie(response.data.token);
+      await setCookie(response.data.token);
     })
     .catch(err=>console.log(err))
   //SET USERID AND EMAIL
@@ -295,8 +295,9 @@ async function login() {
 
 //COOKIE
 function setCookie(token){
+  console.log("TOKEN",token);
   let date = new Date(Date.now() + 86400e3);//1 day
-  document.cookie = "WhyteGoodMan"+"="+token+"; path=/; domain=127.0.0.1; expires="+date+";"
+  document.cookie = "WhyteGoodMan"+"="+token+";"
   console.log("COOKIE",document.cookie);
 }
 
