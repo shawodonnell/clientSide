@@ -1,6 +1,7 @@
 let fingerprint;
 let userID// = "60f85a5ecf06402d10247601"
 let userEmail;
+let token;
 let cartID;
 let isProcessing = false;
 
@@ -287,7 +288,6 @@ async function login() {
     })
     .catch(err=>console.log(err))
 
-    getCookie();
 }
 
 //UTIL FUNCTIONS****************************************
@@ -297,11 +297,12 @@ function setCookie(token){
   document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
 }
 
-function getCookie(){
+function getToken(){
   let match = document.cookie.match("WhyteGoodMan")
-  match = match.input.split("=")
-  match = match[1]
-  console.log("Cookie Value",match);
+  match = match.input.split("=")[1]
+  console.log(match);
+  // match = match[1]
+  // token = match;
 }
 
 //TAP 
