@@ -284,7 +284,7 @@ async function login() {
   })
     .then((response) => {
       console.log("Log in Response:", response)
-      await setCookie(response.data.token);
+      setCookie(response.data.token);
     })
     .catch(err=>console.log(err))
   //SET USERID AND EMAIL
