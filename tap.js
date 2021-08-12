@@ -16,6 +16,7 @@ let socket = io("http://127.0.0.1:3000", {
 
 //CONNECTION TO SERVER - LISTENERS
 socket.on("newConnect", (data) => {
+
   console.log(data);
   socket.open();
   console.log("New Server Connection", socket.id);
@@ -284,11 +285,11 @@ async function login() {
     fingerprint: fingerprint
   })
     .then((response) => {
-      setCookie(response.data.token);
+      //setCookie(response.data.token);
+      console.log(response);
+      window.localStorage.setItem("WGM", "Testing Local Storage")
     })
     .catch(err=>console.log(err))
-
-    getToken()
 
 }
 
@@ -300,8 +301,7 @@ function setCookie(token){
 }
 
 function getToken(){
-  let match = document.cookie.match("WhyteGoodMan").input.split("=")[1]
-  console.log(match);
+  return document.cookie.match("WhyteGoodMan").input.split("=")[1]
 }
 
 //TAP 
