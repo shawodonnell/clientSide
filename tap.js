@@ -283,23 +283,23 @@ async function login() {
     fingerprint: fingerprint
   })
     .then((response) => {
-      console.log("Log in Response:", response)
       setCookie(response.data.token);
     })
     .catch(err=>console.log(err))
-  //SET USERID AND EMAIL
 
+    getCookie();
 }
 
 //UTIL FUNCTIONS****************************************
 
 //COOKIE
 function setCookie(token){
-  console.log("TOKEN",token);
-  let date = new Date(Date.now() + 900000);
   document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
-  //document.cookie = "WhyteGoodMan"+"="+token+"; samesite=none"
-  console.log("COOKIE",document.cookie);
+}
+
+function getCookie(){
+  let match = document.cookie.match("WhyteGoodMan")
+  console.log("GET COOKIE",match);
 }
 
 //TAP 
