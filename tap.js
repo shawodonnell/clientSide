@@ -298,7 +298,7 @@ function setCookie(token){
 }
 
 function getCookie(){
-  let match = document.cookie.match("WhyteGoodMan")
+  let match = document.cookie.match("WhyteGoodMan").split("=").pop()
   console.log("GET COOKIE",match);
 }
 
