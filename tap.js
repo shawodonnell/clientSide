@@ -289,7 +289,7 @@ async function login() {
     .catch(err=>console.log(err))
 
     getToken()
-    
+
 }
 
 //UTIL FUNCTIONS****************************************
@@ -300,11 +300,8 @@ function setCookie(token){
 }
 
 function getToken(){
-  let match = document.cookie.match("WhyteGoodMan")
-  match = match.input.split("=")[1]
+  let match = document.cookie.match("WhyteGoodMan").input.split("=")[1]
   console.log(match);
-  // match = match[1]
-  // token = match;
 }
 
 //TAP 
