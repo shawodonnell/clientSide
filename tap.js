@@ -279,8 +279,8 @@ async function registerUser() {
     user
   })
     .then((response) => {
-      console.log("Registration Response:", response.message), 
-      token = response.token
+      console.log("Registration Response:", response.data.message), 
+      token = response.data.token
     })
     .catch(err => console.log(err))
 
@@ -297,8 +297,8 @@ async function login() {
   })
     .then((response) => {
       //setCookie(response.data.token);
-      console.log("Log in Response:", response), 
-      token = response.token
+      console.log("Log in Response:", response.data.message), 
+      token = response.data.token
     })
     .catch(err=>console.log(err))
 
