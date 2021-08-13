@@ -104,6 +104,7 @@ socket.on("responseIncoming", (data) => {
 
 socket.on("encryptedFingerPrint", (data)=>{
   fingerprint = data
+  console.log("Fingerprint Encoded",fingerprint);
 })
 
 //CART FUNCTIONS*********************************************************
@@ -191,6 +192,7 @@ async function amendCart(target) {
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
     fingerprint: fingerprint,
+    token:token,
     cartID: cartID,
     userID: userID,
     products: [
@@ -340,7 +342,6 @@ function initFingerprintJS() {
     .then(result => {
       socket.emit("encryptFingerPrint",result.visitorId)
       //fingerprint = result.visitorId
-      console.log("FingerPrint", result.visitorId)
     })
 }
 
