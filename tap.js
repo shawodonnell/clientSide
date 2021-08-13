@@ -102,6 +102,10 @@ socket.on("responseIncoming", (data) => {
   console.log("Response...", data);
 })
 
+socket.on("encryptedFingerPrint", (data)=>{
+  fingerprint = data
+})
+
 //CART FUNCTIONS*********************************************************
 
 //EVENT DELEGATION - handling browsers
@@ -152,6 +156,7 @@ async function makePurchase(e) {
       target.style.backgroundColor = "green"
       await axios.post("http://127.0.0.1:3000/api/v1/cart", {
         fingerprint: fingerprint,
+        token:token,
         products: [
           {
             productID: 573901,
@@ -168,8 +173,9 @@ async function makePurchase(e) {
         ]
       }, { withCredentials: true })
         .then(response => {
-          console.log("Order Complete", response.data) //Stripe Reference
-          receipt(response.data)
+          console.log("Order Complete", response.data.response) //Stripe Reference
+          token = response.data.token
+          //receipt(response.data)
         })
         .catch(err => console.log(err))//END OF AXIOS
     }, 1500);
@@ -195,8 +201,9 @@ async function amendCart(target) {
     ]
   }, { withCredentials: true })
     .then(response => {
-      console.log("Order Complete", response.data)
-      receipt(response.data)
+      console.log("Order Complete", response.data.response)
+      token = response.data.token;
+      //receipt(response.data)
     })
     .catch(err => console.log(err))
 }
@@ -269,8 +276,10 @@ async function registerUser() {
   await axios.post('http://127.0.0.1:3000/api/v1/users/register', {
     user
   })
-    .then(response => console.log("Log in Response:", response))
-    //SET USERID AND EMAIL
+    .then((response) => {
+      console.log("Registration Response:", response.message), 
+      token = response.token
+    })
     .catch(err => console.log(err))
 
 }
@@ -286,23 +295,14 @@ async function login() {
   })
     .then((response) => {
       //setCookie(response.data.token);
-      console.log(response);
-      window.localStorage.setItem("WGM", "Testing Local Storage")
+      console.log("Log in Response:", response.message), 
+      token = response.token
     })
     .catch(err=>console.log(err))
 
 }
 
 //UTIL FUNCTIONS****************************************
-
-//COOKIE
-function setCookie(token){
-  document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
-}
-
-function getToken(){
-  return document.cookie.match("WhyteGoodMan").input.split("=")[1]
-}
 
 //TAP 
 function play() {
@@ -338,8 +338,9 @@ function initFingerprintJS() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
-      fingerprint = result.visitorId
-      console.log("FingerPrint", fingerprint)
+      socket.emit("encryptFingerPrint",result.visitorId)
+      //fingerprint = result.visitorId
+      console.log("FingerPrint", result.visitorId)
     })
 }
 
@@ -358,3 +359,13 @@ window.addEventListener("load", function () {
   }
 
 })
+
+//ARCHIVE*****************
+//COOKIE
+function setCookie(token){
+  document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
+}
+
+function getToken(){
+  return document.cookie.match("WhyteGoodMan").input.split("=")[1]
+}
