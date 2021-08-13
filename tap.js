@@ -151,6 +151,7 @@ async function makePurchase(e) {
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
     target.disabled = true;
+    token = sessionStorage.getItem("tap_user_token")
 
     setTimeout(async () => {
       target.disabled = false;
@@ -175,7 +176,7 @@ async function makePurchase(e) {
       }, { withCredentials: true })
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
-          token = response.data.token
+          sessionStorage.setItem("tap_user_token",response.data.token)
           //receipt(response.data)
         })
         .catch(err => console.log(err))//END OF AXIOS
@@ -298,7 +299,7 @@ async function login() {
     .then((response) => {
       //setCookie(response.data.token);
       console.log("Log in Response:", response.data.message), 
-      token = response.data.token
+      sessionStorage.setItem("tap_user_token",response.data.token)
     })
     .catch(err=>console.log(err))
 
@@ -360,6 +361,8 @@ window.addEventListener("load", function () {
   }
 
 })
+
+
 
 //ARCHIVE*****************
 //COOKIE
