@@ -297,7 +297,6 @@ async function login() {
   })
     .then((response) => {
       //setCookie(response.data.token);
-      log
       console.log("Log in Response:", response), 
       token = response.token
     })
