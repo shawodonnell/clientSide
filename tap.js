@@ -281,7 +281,7 @@ async function registerUser() {
   })
     .then((response) => {
       console.log("Registration Response:", response.data.message), 
-      token = response.data.token
+      sessionStorage.setItem("tap_user_token",response.data.token)
     })
     .catch(err => console.log(err))
 
@@ -297,8 +297,7 @@ async function login() {
     fingerprint: fingerprint
   })
     .then((response) => {
-      //setCookie(response.data.token);
-      console.log("Log in Response:", response.data.message), 
+      console.log("Log in Response:", response), 
       sessionStorage.setItem("tap_user_token",response.data.token)
     })
     .catch(err=>console.log(err))
@@ -341,9 +340,7 @@ function initFingerprintJS() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
-      console.log("FP",result.visitorId);
       socket.emit("encryptFingerPrint",result.visitorId)
-      //fingerprint = result.visitorId
     })
 }
 
