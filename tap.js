@@ -341,6 +341,7 @@ function initFingerprintJS() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
+      console.log("FP",result.visitorId);
       socket.emit("encryptFingerPrint",result.visitorId)
       //fingerprint = result.visitorId
     })
@@ -354,6 +355,7 @@ async function reconnectSocket() {
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
+    console.log("loading....");
     reconnectSocket();
     initFingerprintJS();
   } catch (error) {
