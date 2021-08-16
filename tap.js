@@ -340,6 +340,7 @@ function initFingerprintJS() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
+      console.log("Unencoded FP:",result.visitorId);
       socket.emit("encryptFingerPrint",result.visitorId)
     })
 }
