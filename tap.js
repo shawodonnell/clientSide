@@ -1,5 +1,4 @@
 let fingerprint;
-let userID// = "60f85a5ecf06402d10247601"
 let userEmail;
 let token;
 let cartID;
@@ -147,7 +146,7 @@ async function makePurchase(e) {
       target.style.backgroundColor = "yellow";
       setTimeout(() => {
         deleteCart(target);
-      }, 1500);
+      }, 750);
       return
     }
     //AMEND FUNCTION FILTERING
@@ -192,6 +191,7 @@ async function makePurchase(e) {
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
           localStorage.setItem("tap_user_token",response.data.response.token)
+          alert("Order Status:",response.data.response.order)
           //receipt(response.data)
         })
         .catch(err => console.log(err))
@@ -204,13 +204,12 @@ async function makePurchase(e) {
 async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
-  console.log(target.classList);
+  console.log("TARGET",target.classList);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
     fingerprint: fingerprint,
     token:token,
     cartID: cartID,
-    userID: userID,
     products: [
       {
         productID: 573901,
@@ -221,6 +220,7 @@ async function amendCart(target) {
     .then(response => {
       console.log("Order Complete", response.data.response)
       token = response.data.response.token;
+      alert("Order Status:",response.data.response.order)
       //receipt(response.data)
     })
     .catch(err => console.log(err))
@@ -230,12 +230,12 @@ async function amendCart(target) {
 async function deleteCart(target) {
 
   if (!cartID) {
+    console.log("No Cart ID so cant delete");
     return
   }
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
-      cartID: cartID,
-      userID: userID,
+      cartID: cartID
     }
   })
     .then(response => {
@@ -302,7 +302,7 @@ async function registerUser() {
 
 }
 
-//Existing User Login on the main TAP website
+//Existing User Login on the main TAP website AND retailer website
 async function login(email,password) {
   console.log("Logging in....");
   
