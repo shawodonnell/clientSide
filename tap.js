@@ -140,7 +140,7 @@ async function makePurchase(e) {
 
     //TOKEN CHECK / Retailer login Check
     if(!token){
-      return retailLogin()
+      await retailLogin()
     }
 
     //DELETE FUNCTION FILTERING
