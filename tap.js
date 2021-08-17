@@ -1,9 +1,100 @@
 let fingerprint;
-let userEmail;
 let token;
 let cartID;
 let isProcessing = false;
 
+//BROWSERIFY AND FETCH-INJECT SECTION
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+  (function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = global || self, global.fetchInject = factory());
+  }(this, function () { 'use strict';
+  
+    /**
+     * Copyright (C) Josh Habdas <jhabdas@protonmail.com> (https://habd.as)
+     *
+     * This software is provided 'as-is', without any express or implied
+     * warranty.  In no event will the authors be held liable for any damages
+     * arising from the use of this software.
+     *
+     * Permission is granted to anyone to use this software for any purpose,
+     * including commercial applications, and to alter it and redistribute it
+     * freely, subject to the following restrictions:
+     *
+     * 1. The origin of this software must not be misrepresented; you must not
+     *    claim that you wrote the original software. If you use this software
+     *    in a product, an acknowledgment in the product documentation would be
+     *    appreciated but is not required.
+     * 2. Altered source versions must be plainly marked as such, and must not be
+     *    misrepresented as being the original software.
+     * 3. This notice may not be removed or altered from any source distribution.
+     */
+  
+    const head = (function(i,n,j,e,c,t,s){t=n.createElement(j),s=n.getElementsByTagName(j)[0];t.appendChild(n.createTextNode(e.text));t.onload=c(e);s?s.parentNode.insertBefore(t,s):n.head.appendChild(t);}); // eslint-disable-line
+  
+    /**
+     * Fetch Inject module.
+     *
+     * @module fetchInject
+     * @license Zlib
+     * @param {(USVString[]|Request[])} inputs Resources you wish to fetch.
+     * @param {Promise} [promise] A promise to await before attempting injection.
+     * @throws {Promise<ReferenceError>} Rejects with error when given no arguments.
+     * @throws {Promise<TypeError>} Rejects with error on invalid arguments.
+     * @throws {Promise<Error>} Whatever `fetch` decides to throw.
+     * @throws {SyntaxError} Via DOM upon attempting to parse unexpected tokens.
+     * @returns {Promise<Object[]>} A promise which resolves to an `Array` of
+     *     Objects containing `Response` `Body` properties used by the module.
+     */
+    const fetchInject = function (inputs, promise) {
+      if (!arguments.length) return Promise.reject(new ReferenceError("Failed to execute 'fetchInject': 1 argument required but only 0 present."))
+      if (arguments[0] && arguments[0].constructor !== Array) return Promise.reject(new TypeError("Failed to execute 'fetchInject': argument 1 must be of type 'Array'."))
+      if (arguments[1] && arguments[1].constructor !== Promise) return Promise.reject(new TypeError("Failed to execute 'fetchInject': argument 2 must be of type 'Promise'."))
+  
+      const resources = [];
+      const deferreds = promise ? [].concat(promise) : [];
+      const thenables = [];
+  
+      inputs.forEach(input => deferreds.push(
+        window.fetch(input).then(res => {
+          return [res.clone().text(), res.blob()]
+        }).then(promises => {
+          return Promise.all(promises).then(resolved => {
+            resources.push({ text: resolved[0], blob: resolved[1] });
+          })
+        })
+      ));
+  
+      return Promise.all(deferreds).then(() => {
+        resources.forEach(resource => {
+          thenables.push({ then: resolve => {
+            resource.blob.type.includes('text/css')
+              ? head(window, document, 'style', resource, resolve)
+              : head(window, document, 'script', resource, resolve);
+          } });
+        });
+        return Promise.all(thenables)
+      })
+    };
+  
+    return fetchInject;
+  
+  }));
+  
+  },{}],2:[function(require,module,exports){
+  const fetchInject2 = require('fetch-inject')
+  
+  fetchInject2([
+      "http://127.0.0.1:3000/socket.io/socket.io.js",
+      "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+      "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js",
+  ])
+  
+  
+  },{"fetch-inject":1}]},{},[2]);
+  
 //SOCKETS********************************************************
 
 let socket = io("http://127.0.0.1:3000", {
@@ -165,7 +256,6 @@ async function makePurchase(e) {
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
     target.disabled = true;
-    token = localStorage.getItem("tap_user_token")
 
     setTimeout(async () => {
       target.disabled = false;
@@ -191,7 +281,7 @@ async function makePurchase(e) {
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
           localStorage.setItem("tap_user_token",response.data.response.token)
-          alert("Order Status:",response.data.response.order)
+          alert(`Order Status: ${response.data.response.order}`)
           //receipt(response.data)
         })
         .catch(err => console.log(err))
@@ -244,7 +334,6 @@ async function deleteCart(target) {
     .catch(err => {
       console.log(err);
     })
-  resetElements();
 }
 
 //LOGIN FUNCTIONS***********************************************
@@ -283,7 +372,6 @@ async function registerUser() {
         colour: regForm_prefColour.value
       }
     ]
-
   }
 
   if (!user) {
