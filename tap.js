@@ -220,7 +220,7 @@ async function amendCart(target) {
     .then(response => {
       console.log("Order Complete", response.data.response)
       token = response.data.response.token;
-      alert("Order Status:",response.data.response.order)
+      alert(`Order Status: ${response.data.response.order}`)
       //receipt(response.data)
     })
     .catch(err => console.log(err))
