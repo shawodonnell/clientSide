@@ -137,6 +137,12 @@ async function makePurchase(e) {
 
   //TAP BUTTON FILTERING
   if (target.className.match("tap_btn")) {
+
+    //TOKEN CHECK / Retailer login Check
+    if(!token){
+      return retailLogin()
+    }
+
     //DELETE FUNCTION FILTERING
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true;
@@ -162,7 +168,7 @@ async function makePurchase(e) {
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
     target.disabled = true;
-    token = sessionStorage.getItem("tap_user_token")
+    token = localStorage.getItem("tap_user_token")
 
     setTimeout(async () => {
       target.disabled = false;
@@ -187,7 +193,7 @@ async function makePurchase(e) {
       }, { withCredentials: true })
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
-          sessionStorage.setItem("tap_user_token",response.data.token)
+          localStorage.setItem("tap_user_token",response.data.token)
           //receipt(response.data)
         })
         .catch(err => console.log(err))//END OF AXIOS
@@ -292,28 +298,42 @@ async function registerUser() {
   })
     .then((response) => {
       console.log("Registration Response:", response.data.message), 
-      sessionStorage.setItem("tap_user_token",response.data.token)
+      token = response.data.token;
+      localStorage.setItem("tap_user_token",token)      
     })
     .catch(err => console.log(err))
 
 }
 
-//Existing User Login
-async function login() {
+//Existing User Login on the main TAP website
+async function login(email,password) {
   console.log("Logging in....");
   
   await axios.post('http://127.0.0.1:3000/api/v1/users/login', {
-    email: loginForm_email.value,
-    password: loginForm_password.value,
+    email: email,
+    password: password,
     fingerprint: fingerprint
   })
     .then((response) => {
       console.log("Log in Response:", response), 
       token = response.data.token;
-      window.close()
       localStorage.setItem("tap_user_token",token)      
     })
     .catch(err=>console.log(err))
+
+}
+
+//Retail Login - loggin in during a shopping session/from a retailers website
+async function retailLogin() {
+  let email = prompt("Please enter your userName");
+  let password = prompt("Please enter your password");
+
+  if (email == null || email == "" || password == null || password == "" ) {
+    alert("Please enter login details");
+    retailLogin();
+  } else {
+    login(email,password)
+  }
 
 }
 
@@ -363,10 +383,15 @@ async function reconnectSocket() {
   console.log("New Server Connection", socket.id);
 }
 
+function checkToken(){
+  token = localStorage.getItem("tap_user_token");
+}
+
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
+    checkToken();
     reconnectSocket();
     initFingerprintJS();
   } catch (error) {

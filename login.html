@@ -28,7 +28,7 @@
         document.querySelector('#loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                login();
+                login(loginForm_email.value,loginForm_password.value);
             } catch (error) {
                 alert(error)
             }
