@@ -311,7 +311,7 @@ async function login() {
       console.log("Log in Response:", response), 
       token = response.data.token;
       window.close()
-      sessionStorage.setItem("tap_user_token",token)      
+      localStorage.setItem("tap_user_token",token)      
     })
     .catch(err=>console.log(err))
 
