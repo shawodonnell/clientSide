@@ -27,12 +27,12 @@ socket.on("disconnect", () => {
   socket.open();
 })
 
-//AUTHENICATING RETAILER AND USER - LISTENERS
+//SOCKET ERROR HANDLING
 
 socket.on("failedUserAuth", (data) => {
   alert(data)
   //Include https:// otherwise appends URL onto current webpages url
-  window.open("https://www.google.com", "_blank")
+  window.open("/login.html", "_blank")
   resetElements();
 })
 
@@ -43,8 +43,22 @@ socket.on("retailerError", (data) => {
 
 socket.on("customerAuthError", (data) => {
   alert(data);
-  window.open("https://www.google.com", "_blank")
+  window.open("/login.html", "_blank")
   resetElements()
+})
+
+socket.on("cartError", (data) => {
+  alert(data);
+  resetElements()
+})
+
+socket.on("deleteError", (data) => {
+  console.log("ERROR...", data);
+  resetElements();
+})
+
+socket.on("cartAmendEror", (data) => {
+  console.log("Order Error...", data);
 })
 
 //PURCHASING ITEMS - LISTENERS
@@ -63,19 +77,11 @@ socket.on("cartDeleted", (data) => {
   console.log("Deleted...", data);
 })
 
-socket.on("deleteError", (data) => {
-  console.log("ERROR...", data);
-  // resetElements();
-})
 
 //AMENDING CART - LISTENERS
 
 socket.on("cartAmended", (data) => {
   console.log("Order Amended...", data);
-})
-
-socket.on("cartAmendEror", (data) => {
-  console.log("Order Error...", data);
 })
 
 socket.on("newCart", (data) => {
@@ -121,8 +127,6 @@ else {
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself  
-  console.log("EVENT", e);
-  console.log("TARGET", target);
 
   //TAP BUTTON FILTERING
   if (target.className.match("tap_btn")) {
@@ -299,6 +303,7 @@ async function login() {
     .then((response) => {
       console.log("Log in Response:", response), 
       sessionStorage.setItem("tap_user_token",response.data.token)
+      window.open("/index.html")
     })
     .catch(err=>console.log(err))
 
