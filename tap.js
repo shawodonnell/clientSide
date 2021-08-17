@@ -193,11 +193,11 @@ async function makePurchase(e) {
       }, { withCredentials: true })
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
-          localStorage.setItem("tap_user_token",response.data.token)
+          localStorage.setItem("tap_user_token",response.data.response.token)
           //receipt(response.data)
         })
-        .catch(err => console.log(err))//END OF AXIOS
-    }, 1500);
+        .catch(err => console.log(err))
+    }, 750);
 
   }//END OF IF
 }//END OF FUNCTION
@@ -222,7 +222,7 @@ async function amendCart(target) {
   }, { withCredentials: true })
     .then(response => {
       console.log("Order Complete", response.data.response)
-      token = response.data.token;
+      token = response.data.response.token;
       //receipt(response.data)
     })
     .catch(err => console.log(err))
@@ -242,7 +242,6 @@ async function deleteCart(target) {
   })
     .then(response => {
       cartID = "";
-      //resetElements();
     })
     .catch(err => {
       console.log(err);
@@ -325,7 +324,7 @@ async function login(email,password) {
 
 //Retail Login - loggin in during a shopping session/from a retailers website
 async function retailLogin() {
-  let email = prompt("Please enter your userName");
+  let email = prompt("Please enter your email");
   let password = prompt("Please enter your password");
 
   if (email == null || email == "" || password == null || password == "" ) {
