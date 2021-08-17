@@ -140,7 +140,7 @@ async function makePurchase(e) {
 
     //TOKEN CHECK / Retailer login Check
     if(!token){
-      await retailLogin()
+      return retailLogin()
     }
 
     //DELETE FUNCTION FILTERING
@@ -329,7 +329,6 @@ async function retailLogin() {
 
   if (email == null || email == "" || password == null || password == "" ) {
     alert("Please enter login details");
-    retailLogin();
   } else {
     login(email,password)
   }
@@ -391,6 +390,7 @@ window.addEventListener("load", function () {
   try {
     console.log("loading....");
     checkToken();
+    console.log("TOKEN",token);
     reconnectSocket();
     initFingerprintJS();
   } catch (error) {
