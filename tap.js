@@ -86,7 +86,7 @@ let isProcessing = false;
   const fetchInject2 = require('fetch-inject')
   
   fetchInject2([
-      "http://127.0.0.1:3000/socket.io/socket.io.js",
+      "https://cdn.jsdelivr.net/npm/socket.io-client@4.1.2/dist/socket.io.min.js",
       "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
       "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js",
