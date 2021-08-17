@@ -309,8 +309,9 @@ async function login() {
   })
     .then((response) => {
       console.log("Log in Response:", response), 
-      sessionStorage.setItem("tap_user_token",response.data.token)
+      token = response.data.token;
       window.close()
+      sessionStorage.setItem("tap_user_token",token)      
     })
     .catch(err=>console.log(err))
 
