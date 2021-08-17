@@ -32,14 +32,14 @@ socket.on("disconnect", () => {
 socket.on("failedUserAuth", (data) => {
   alert(data)
   //Include https:// otherwise appends URL onto current webpages url
-  window.open("clientSide/login.html", "_blank")
+  window.open("login.html", "_blank")
   resetElements();
 })
 
 
 socket.on("generalAuthError", (data) => {
   alert(data)
-  window.open("clientSide/login.html", "_blank")
+  window.open("login.html", "_blank")
   resetElements();
 })
 
@@ -50,7 +50,7 @@ socket.on("retailerError", (data) => {
 
 socket.on("customerAuthError", (data) => {
   alert(data);
-  window.open("clientSide/login.html", "_blank")
+  window.open("login.html", "_blank")
   resetElements()
 })
 
