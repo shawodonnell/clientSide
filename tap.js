@@ -31,15 +31,14 @@ socket.on("disconnect", () => {
 
 socket.on("failedUserAuth", (data) => {
   alert(data)
-  //Include https:// otherwise appends URL onto current webpages url
-  window.open("login.html", "_blank")
+  //Include https:// otherwise appends URL onto current webpages url //DEPRECATED AFTER REDESIGN OF LOGIN PROCESS
+  //window.open("login.html", "_blank")
   resetElements();
 })
 
 
 socket.on("generalAuthError", (data) => {
   alert(data)
-  window.open("login.html", "_blank")
   resetElements();
 })
 
@@ -50,7 +49,6 @@ socket.on("retailerError", (data) => {
 
 socket.on("customerAuthError", (data) => {
   alert(data);
-  window.open("login.html", "_blank")
   resetElements()
 })
 
@@ -140,7 +138,7 @@ async function makePurchase(e) {
 
     //TOKEN CHECK / Retailer login Check
     if(!token){
-      return retailLogin()
+      await retailLogin()
     }
 
     //DELETE FUNCTION FILTERING
