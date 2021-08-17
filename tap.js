@@ -310,7 +310,7 @@ async function login() {
     .then((response) => {
       console.log("Log in Response:", response), 
       sessionStorage.setItem("tap_user_token",response.data.token)
-      window.open("/index.html")
+      location.href("https://shawodonnell.github.io/clientSide/")
     })
     .catch(err=>console.log(err))
 
