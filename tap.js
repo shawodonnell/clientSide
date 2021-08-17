@@ -36,6 +36,13 @@ socket.on("failedUserAuth", (data) => {
   resetElements();
 })
 
+
+socket.on("generalAuthError", (data) => {
+  alert(data)
+  window.open("/login.html", "_blank")
+  resetElements();
+})
+
 socket.on("retailerError", (data) => {
   alert(data);
   resetElements()
