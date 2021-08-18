@@ -12,7 +12,6 @@ let socket = io("http://127.0.0.1:3000", {
   timeout: 5000,
 });
 
-//CONNECTION TO SERVER - LISTENERS
 socket.on("newConnect", (data) => {
   console.log(data);
   socket.open();
@@ -24,7 +23,10 @@ socket.on("disconnect", () => {
   socket.open();
 })
 
-//SOCKET ERROR HANDLING
+socket.on("encryptedFingerPrint", (data) => {
+  fingerprint = data
+  console.log("Fingerprint Encoded", fingerprint);
+})
 
 socket.on("error", (error) => {
   alert(error)
@@ -34,7 +36,6 @@ socket.on("error", (error) => {
   resetElements();
 })
 
-//CARTID Socket
 socket.on("cartID", (data) => {
   cartID = data;
   console.log("CARTID", cartID);
@@ -47,11 +48,6 @@ socket.on("util", (data) => {
 socket.on("response", (data) => {
   console.log(data);
   resetElements()
-})
-
-socket.on("encryptedFingerPrint", (data)=>{
-  fingerprint = data
-  console.log("Fingerprint Encoded",fingerprint);
 })
 
 //CART FUNCTIONS*********************************************************
@@ -73,7 +69,7 @@ async function makePurchase(e) {
   if (target.className.match("tap_btn")) {
 
     //TOKEN CHECK / Retailer login Check
-    if(!token){
+    if (!token) {
       await retailLogin()
     }
 
@@ -108,7 +104,7 @@ async function makePurchase(e) {
       target.style.backgroundColor = "green"
       await axios.post("http://127.0.0.1:3000/api/v1/cart", {
         fingerprint: fingerprint,
-        token:token,
+        token: token,
         products: [
           {
             productID: 573901,
@@ -126,7 +122,7 @@ async function makePurchase(e) {
       }, { withCredentials: true })
         .then(response => {
           console.log("Order Complete", response.data.response) //Stripe Reference
-          localStorage.setItem("tap_user_token",response.data.response.token)
+          localStorage.setItem("tap_user_token", response.data.response.token)
           alert(`Order Status: ${response.data.response.order}`)
           //receipt(response.data)
         })
@@ -140,11 +136,11 @@ async function makePurchase(e) {
 async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
-  console.log("TARGET",target.classList);
+  console.log("TARGET", target.classList);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
     fingerprint: fingerprint,
-    token:token,
+    token: token,
     cartID: cartID,
     products: [
       {
@@ -228,29 +224,29 @@ async function registerUser() {
     user
   })
     .then((response) => {
-      console.log("Registration Response:", response.data.message), 
-      token = response.data.token;
-      localStorage.setItem("tap_user_token",token)      
+      console.log("Registration Response:", response.data.message),
+        token = response.data.token;
+      localStorage.setItem("tap_user_token", token)
     })
     .catch(err => console.log(err))
 
 }
 
 //Existing User Login on the main TAP website AND retailer website
-async function login(email,password) {
+async function login(email, password) {
   console.log("Logging in....");
-  
+
   await axios.post('http://127.0.0.1:3000/api/v1/users/login', {
     email: email,
     password: password,
     fingerprint: fingerprint
   })
     .then((response) => {
-      console.log("Log in Response:", response), 
-      token = response.data.token;
-      localStorage.setItem("tap_user_token",token)      
+      console.log("Log in Response:", response),
+        token = response.data.token;
+      localStorage.setItem("tap_user_token", token)
     })
-    .catch(err=>console.log(err))
+    .catch(err => console.log(err))
 
 }
 
@@ -259,10 +255,10 @@ async function retailLogin() {
   let email = prompt("Please enter your email");
   let password = prompt("Please enter your password");
 
-  if (email == null || email == "" || password == null || password == "" ) {
+  if (email == null || email == "" || password == null || password == "") {
     alert("Please enter login details");
   } else {
-    login(email,password)
+    login(email, password)
   }
 
 }
@@ -303,8 +299,8 @@ function initFingerprintJS() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
-      console.log("Unencoded FP:",result.visitorId);
-      socket.emit("encryptFingerPrint",result.visitorId)
+      console.log("Unencoded FP:", result.visitorId);
+      socket.emit("encryptFingerPrint", result.visitorId)
     })
 }
 
@@ -313,7 +309,7 @@ async function reconnectSocket() {
   console.log("New Server Connection", socket.id);
 }
 
-function checkToken(){
+function checkToken() {
   token = localStorage.getItem("tap_user_token");
 }
 
@@ -322,7 +318,7 @@ window.addEventListener("load", function () {
   try {
     console.log("loading....");
     checkToken();
-    console.log("TOKEN",token);
+    console.log("TOKEN", token);
     reconnectSocket();
     initFingerprintJS();
   } catch (error) {
@@ -335,10 +331,10 @@ window.addEventListener("load", function () {
 
 //ARCHIVE*****************
 //COOKIE
-function setCookie(token){
+function setCookie(token) {
   document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
 }
 
-function getToken(){
+function getToken() {
   return document.cookie.match("WhyteGoodMan").input.split("=")[1]
 }
