@@ -303,94 +303,95 @@ function generateButtons() {
 
   try {
 
-      let resultsArray = [];
-      let resultsParsedArray = []
-      let resultsAncestors = []
-      let parent;
+    let resultsArray = [];
+    let resultsParsedArray = []
+    let resultsAncestors = []
+    let parent;
 
-      toArray(document.evaluate(`//text()[contains(.,\'£\')]`, document.body, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null))
-      byLength(resultsArray)
-      byAncestor(resultsParsedArray[Math.floor(Math.random() * resultsParsedArray.length)])
-      byChildNodes(resultsAncestors);
-      insertButtons(parent);
+    toArray(document.evaluate(`//text()[contains(.,\'£\')]`, document.body, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null))
+    byLength(resultsArray)
+    byAncestor(resultsParsedArray[Math.floor(Math.random() * resultsParsedArray.length)])
+    byChildNodes(resultsAncestors);
+    insertButtons(parent);
 
-  } catch (error) {
-      console.log(error);
-  }
 
-  //GenerateButtons FUNCTIONS
-  //Change XPATH to Array
-  function toArray(results) {
+
+    //GenerateButtons FUNCTIONS
+    //Change XPATH to Array
+    function toArray(results) {
       let result = results.iterateNext();
       while (result) {
-          resultsArray.push(result);
-          result = results.iterateNext();
+        resultsArray.push(result);
+        result = results.iterateNext();
       }
-  }
+    }
 
-  //FILTER ARRAY by Length - £12.99 = length of 6/ under 10 includes all characters £ and dots, pounds and pence
-  async function byLength(resultsArray) {
+    //FILTER ARRAY by Length - £12.99 = length of 6/ under 10 includes all characters £ and dots, pounds and pence
+    async function byLength(resultsArray) {
       resultsArray.forEach(element => {
-          if (element.length >= 2 && element.length < 10) {
-              resultsParsedArray.push(element)
-          }
+        if (element.length >= 2 && element.length < 10) {
+          resultsParsedArray.push(element)
+        }
       });
 
 
-  }
+    }
 
-  //FILTER ARRAY by childNode Length
-  async function byAncestor(node, previousCount = 0) {
+    //FILTER ARRAY by childNode Length
+    async function byAncestor(node, previousCount = 0) {
 
       let currentCount = node.childNodes.length;
 
       if (node.localName === 'main' || node.nodeName === "main" || node.localName === 'MAIN' || node.nodeName === "MAIN") {
-          return
+        return
       }
 
       if (node.localName !== 'main' || node.nodeName !== "main" || node.localName !== 'MAIN' || node.nodeName !== "MAIN") {
 
-          if (currentCount > previousCount) {
-              let className = node.className;
-              let nodeName = node.nodeName;
-              let count = node.childNodes.length;
-              resultsAncestors.push({ className, nodeName, count })
-          }
-          byAncestor(node.parentElement, currentCount)
+        if (currentCount > previousCount) {
+          let className = node.className;
+          let nodeName = node.nodeName;
+          let count = node.childNodes.length;
+          resultsAncestors.push({ className, nodeName, count })
+        }
+        byAncestor(node.parentElement, currentCount)
       }
-  }
+    }
 
-  function byChildNodes(resultsAncestors) {
+    function byChildNodes(resultsAncestors) {
       let count = resultsAncestors[0].count
       let name = "";
 
       for (let i = 1; i < resultsAncestors.length; i++) {
 
-          if (resultsAncestors[i].count > count) {
-              count = resultsAncestors[i].count
-              name = resultsAncestors[i].className
-          }
+        if (resultsAncestors[i].count > count) {
+          count = resultsAncestors[i].count
+          name = resultsAncestors[i].className
+        }
 
       }
       parent = name;
-  }
+    }
 
-  function insertButtons(result) {
+    function insertButtons(result) {
       console.log(result);
 
       console.log(document.querySelector(`.${result}`).childNodes);
 
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
-          if (!e.nodeName.includes("#")) {
-              let button = document.createElement('button')
-              button.innerText = "Buy"
-              button.id = e.id
-              button.classList.add("tap_btn");
-              e.appendChild(button);
-          }
+        if (!e.nodeName.includes("#")) {
+          let button = document.createElement('button')
+          button.innerText = "Buy"
+          button.id = e.id
+          button.classList.add("tap_btn");
+          e.appendChild(button);
+        }
 
       })
 
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
