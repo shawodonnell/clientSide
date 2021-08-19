@@ -30,7 +30,7 @@ function toArray(results) {
     return resultsArray
 }
 
-//fILTER ARRAY by Length
+//FILTER ARRAY by Length - £12.99 = length of 6/ under 10 includes all characters £ and dots, pounds and pence
 function byLength(results) {
     let resultsParsed = []
     results.forEach(e => {

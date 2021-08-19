@@ -265,7 +265,6 @@ async function retailLogin() {
 
 //UTIL FUNCTIONS****************************************
 
-//TAP 
 function play() {
   var audio = document.getElementById("audio");
   audio.play();
@@ -281,25 +280,11 @@ function resetElements() {
   })
 }
 
-function receipt(data) {
-  const div = document.querySelector(".receipt");
-  receiptData = { name: data.name, date: data.dataOrdered, items: data.items.toString(), price: data.price }
-  div.innerHTML = receiptData
-}
-
-async function sleep(ms) {
-  console.log("starting sleep...");
-  return setTimeout(() => {
-
-  }, ms);
-}
-
 function initFingerprintJS() {
   const fpPromise = FingerprintJS.load()
   fpPromise
     .then(fp => fp.get())
     .then(result => {
-      console.log("Unencoded FP:", result.visitorId);
       socket.emit("encryptFingerPrint", result.visitorId)
     })
 }
@@ -313,14 +298,110 @@ function checkToken() {
   token = localStorage.getItem("tap_user_token");
 }
 
+//Generating the Buttons Dynamically 
+function generateButtons() {
+
+  try {
+
+      let resultsArray = [];
+      let resultsParsedArray = []
+      let resultsAncestors = []
+      let parent;
+
+      toArray(document.evaluate(`//text()[contains(.,\'£\')]`, document.body, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null))
+      byLength(resultsArray)
+      byAncestor(resultsParsedArray[Math.floor(Math.random() * resultsParsedArray.length)])
+      byChildNodes(resultsAncestors);
+      insertButtons(parent);
+
+  } catch (error) {
+      console.log(error);
+  }
+
+  //GenerateButtons FUNCTIONS
+  //Change XPATH to Array
+  function toArray(results) {
+      let result = results.iterateNext();
+      while (result) {
+          resultsArray.push(result);
+          result = results.iterateNext();
+      }
+  }
+
+  //FILTER ARRAY by Length - £12.99 = length of 6/ under 10 includes all characters £ and dots, pounds and pence
+  async function byLength(resultsArray) {
+      resultsArray.forEach(element => {
+          if (element.length >= 2 && element.length < 10) {
+              resultsParsedArray.push(element)
+          }
+      });
+
+
+  }
+
+  //FILTER ARRAY by childNode Length
+  async function byAncestor(node, previousCount = 0) {
+
+      let currentCount = node.childNodes.length;
+
+      if (node.localName === 'main' || node.nodeName === "main" || node.localName === 'MAIN' || node.nodeName === "MAIN") {
+          return
+      }
+
+      if (node.localName !== 'main' || node.nodeName !== "main" || node.localName !== 'MAIN' || node.nodeName !== "MAIN") {
+
+          if (currentCount > previousCount) {
+              let className = node.className;
+              let nodeName = node.nodeName;
+              let count = node.childNodes.length;
+              resultsAncestors.push({ className, nodeName, count })
+          }
+          byAncestor(node.parentElement, currentCount)
+      }
+  }
+
+  function byChildNodes(resultsAncestors) {
+      let count = resultsAncestors[0].count
+      let name = "";
+
+      for (let i = 1; i < resultsAncestors.length; i++) {
+
+          if (resultsAncestors[i].count > count) {
+              count = resultsAncestors[i].count
+              name = resultsAncestors[i].className
+          }
+
+      }
+      parent = name;
+  }
+
+  function insertButtons(result) {
+      console.log(result);
+
+      console.log(document.querySelector(`.${result}`).childNodes);
+
+      document.querySelector(`.${result}`).childNodes.forEach((e) => {
+          if (!e.nodeName.includes("#")) {
+              let button = document.createElement('button')
+              button.innerText = "Buy"
+              button.id = e.id
+              button.classList.add("tap_btn");
+              e.appendChild(button);
+          }
+
+      })
+
+  }
+}
+
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
     checkToken();
-    console.log("TOKEN", token);
     reconnectSocket();
     initFingerprintJS();
+    generateButtons();
   } catch (error) {
     alert(error)
   }
@@ -337,4 +418,19 @@ function setCookie(token) {
 
 function getToken() {
   return document.cookie.match("WhyteGoodMan").input.split("=")[1]
+}
+
+//function archive
+async function sleep(ms) {
+  console.log("starting sleep...");
+  return setTimeout(() => {
+
+  }, ms);
+}
+
+
+function receipt(data) {
+  const div = document.querySelector(".receipt");
+  receiptData = { name: data.name, date: data.dataOrdered, items: data.items.toString(), price: data.price }
+  div.innerHTML = receiptData
 }
