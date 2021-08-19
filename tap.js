@@ -1,7 +1,10 @@
+//Global Variable
 let fingerprint;
 let token;
 let cartID;
 let isProcessing = false;
+let products = [];
+let quantity = 1 || document.querySelector("#product_quantity").value; 
 
 //SOCKETS********************************************************
 
@@ -31,8 +34,6 @@ socket.on("encryptedFingerPrint", (data) => {
 socket.on("error", (error) => {
   alert(error)
   console.log(error);
-  //Include https:// otherwise appends URL onto current webpages url //DEPRECATED AFTER REDESIGN OF LOGIN PROCESS
-  //window.open("login.html", "_blank")
   resetElements();
 })
 
@@ -92,9 +93,10 @@ async function makePurchase(e) {
       return
     }
 
-    //PURCHASE ITEMS / START NEW CART
+    //PURCHASE ITEMS
     isProcessing = true;
     target.style.backgroundColor = "black"
+    target.style.colour="white"
     target.classList.add("inCart")
     target.classList.add("initialPurchase")
     target.disabled = true;
@@ -102,26 +104,17 @@ async function makePurchase(e) {
     setTimeout(async () => {
       target.disabled = false;
       target.style.backgroundColor = "green"
+
+      product = {productID:target.id,quantity:quantity}
+      products.push(product);
+      
       await axios.post("http://127.0.0.1:3000/api/v1/cart", {
         fingerprint: fingerprint,
         token: token,
-        products: [
-          {
-            productID: 573901,
-            quantity: 2
-          },
-          {
-            productID: 573901,
-            quantity: 2
-          },
-          {
-            productID: 573901,
-            quantity: 2
-          }
-        ]
+        products:products
       }, { withCredentials: true })
         .then(response => {
-          console.log("Order Complete", response.data.response) //Stripe Reference
+          console.log("Order Complete", response.data.response) 
           localStorage.setItem("tap_user_token", response.data.response.token)
           alert(`Order Status: ${response.data.response.order}`)
           //receipt(response.data)
@@ -136,18 +129,15 @@ async function makePurchase(e) {
 async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
-  console.log("TARGET", target.classList);
+
+  product = {productID:target.id,quantity:quantity}
+  products.push(product);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
     fingerprint: fingerprint,
     token: token,
     cartID: cartID,
-    products: [
-      {
-        productID: 573901,
-        quantity: 2
-      }
-    ]
+    products: products
   }, { withCredentials: true })
     .then(response => {
       console.log("Order Complete", response.data.response)
@@ -170,7 +160,7 @@ async function deleteCart(target) {
       cartID: cartID
     }
   })
-    .then(response => {
+    .then(() => {
       cartID = "";
     })
     .catch(err => {
@@ -271,12 +261,15 @@ function play() {
 }
 
 function resetElements() {
+  products = [];
+  isProcessing = false;
+  cartID = "";
+
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
     btn.style.backgroundColor = "red";
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
     btn.disabled = false;
-    isProcessing = false;
   })
 }
 
