@@ -51,9 +51,8 @@ socket.on("response", (data) => {
   resetElements()
 })
 
-//CART FUNCTIONS*********************************************************
-
-//EVENT DELEGATION - handling browsers
+//*****CART SECTION*****
+//EVENT DELEGATION - Listens for click/onclick events on the webpage depending on browser, and if triggered then calls the makePurchase function.
 
 if (document.body.addEventListener) {
   document.body.addEventListener('click', makePurchase, false);
@@ -62,19 +61,18 @@ else {
   document.body.attachEvent('onclick', makePurchase);//for IE
 }
 
+//EVENT FILTERING - validation on event and instance variables to determine process to follow
 async function makePurchase(e) {
   e = e || window.event;//The Event itself
   let target = e.target || e.srcElement; //The button itself  
 
-  //TAP BUTTON FILTERING
-  if (target.className.match("tap_btn")) {
+  if (target.className.match("tap_btn")) { //if button click was a tap_btn....
 
-    //TOKEN CHECK / Retailer login Check
-    if (!token) {
+    if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
       await retailLogin()
     }
 
-    //DELETE FUNCTION FILTERING
+    //DELETING FUNCTION 
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true;
       target.style.backgroundColor = "yellow";
@@ -82,48 +80,55 @@ async function makePurchase(e) {
         deleteCart(target);
       }, 750);
       return
-    }
-    //AMEND FUNCTION FILTERING
-    if (isProcessing && !target.classList.contains("initialPurchase")) {
+    } 
+    //AMENDING FUNCTION
+    else if (isProcessing && !target.classList.contains("initialPurchase")) {
       target.disabled = true;
       setTimeout(() => {
         target.disabled = false;
         amendCart(target);
       }, 1500);
       return
+    } 
+    //PURCHASING FUNCTION
+    else {
+    purchaseItems(target)
+    return
     }
+  }
+}
 
-    //PURCHASE ITEMS
-    isProcessing = true;
-    target.style.backgroundColor = "black"
-    target.style.colour="white"
-    target.classList.add("inCart")
-    target.classList.add("initialPurchase")
-    target.disabled = true;
+//PURCHASING ITEM / GENERATING CART
+async function purchaseItems(taret){
+  isProcessing = true;
+  target.style.backgroundColor = "black"
+  target.style.colour="white"
+  target.classList.add("inCart")
+  target.classList.add("initialPurchase")
+  target.disabled = true;
 
-    setTimeout(async () => {
-      target.disabled = false;
-      target.style.backgroundColor = "green"
+  setTimeout(async () => {
+    
+    target.disabled = false;
+    target.style.backgroundColor = "green"
 
-      product = {productID:target.id,quantity:quantity}
-      products.push(product);
-      
-      await axios.post("http://127.0.0.1:3000/api/v1/cart", {
-        fingerprint: fingerprint,
-        token: token,
-        products:products
-      }, { withCredentials: true })
-        .then(response => {
-          console.log("Order Complete", response.data.response) 
-          localStorage.setItem("tap_user_token", response.data.response.token)
-          alert(`Order Status: ${response.data.response.order}`)
-          //receipt(response.data)
-        })
-        .catch(err => console.log(err))
-    }, 750);
-
-  }//END OF IF
-}//END OF FUNCTION
+    product = {productID:target.id,quantity:quantity}
+    products.push(product);
+    
+    await axios.post("http://127.0.0.1:3000/api/v1/cart", {
+      fingerprint: fingerprint,
+      token: token,
+      products:products
+    }, { withCredentials: true })
+      .then(response => {
+        console.log("Order Complete", response.data.response) 
+        localStorage.setItem("tap_user_token", response.data.response.token)
+        alert(`Order Status: ${response.data.response.order}`)
+        //receipt(response.data)
+      })
+      .catch(err => console.log(err))
+  }, 750);
+}
 
 //AMENDING CART
 async function amendCart(target) {
@@ -168,9 +173,8 @@ async function deleteCart(target) {
     })
 }
 
-//LOGIN FUNCTIONS***********************************************
-
-//New User Registering
+//*****LOGIN FUNCTIONS*****
+//REGISTRATION - registering new users on the TAP website
 async function registerUser() {
   console.log("Form Submitted");
 
@@ -222,7 +226,7 @@ async function registerUser() {
 
 }
 
-//Existing User Login on the main TAP website AND retailer website
+//CENTRAL LOGIN FUNCTION - shared with the main tap website and retailers login
 async function login(email, password) {
   console.log("Logging in....");
 
@@ -240,7 +244,7 @@ async function login(email, password) {
 
 }
 
-//Retail Login - loggin in during a shopping session/from a retailers website
+//PROMPTING LOGIN - from retailers website
 async function retailLogin() {
   let email = prompt("Please enter your email");
   let password = prompt("Please enter your password");
@@ -253,13 +257,14 @@ async function retailLogin() {
 
 }
 
-//UTIL FUNCTIONS****************************************
-
+//*****UTIL FUNCTIONS*****
+//AUDIO on button click
 function play() {
   var audio = document.getElementById("audio");
   audio.play();
 }
 
+//RESETTING elements after event process has completed either with success or error
 function resetElements() {
   products = [];
   isProcessing = false;
@@ -273,7 +278,8 @@ function resetElements() {
   })
 }
 
-function initFingerprintJS() {
+//FINGERPRINTING initialistion 
+function getFingerprint() {
   const fpPromise = FingerprintJS.load()
   fpPromise
     .then(fp => fp.get())
@@ -282,11 +288,13 @@ function initFingerprintJS() {
     })
 }
 
+//SOCKET reconnection
 async function reconnectSocket() {
   socket.open();
   console.log("New Server Connection", socket.id);
 }
 
+//Checking if token exists on local domain 
 function checkToken() {
   token = localStorage.getItem("tap_user_token");
 }
@@ -306,8 +314,6 @@ function generateButtons() {
     byAncestor(resultsParsedArray[Math.floor(Math.random() * resultsParsedArray.length)])
     byChildNodes(resultsAncestors);
     insertButtons(parent);
-
-
 
     //GenerateButtons FUNCTIONS
     //Change XPATH to Array
@@ -369,8 +375,6 @@ function generateButtons() {
     function insertButtons(result) {
       console.log(result);
 
-      console.log(document.querySelector(`.${result}`).childNodes);
-
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#")) {
           let button = document.createElement('button')
@@ -394,14 +398,13 @@ window.addEventListener("load", function () {
     console.log("loading....");
     checkToken();
     reconnectSocket();
-    initFingerprintJS();
+    getFingerprint();
     generateButtons();
   } catch (error) {
     alert(error)
   }
 
 })
-
 
 
 //ARCHIVE*****************
