@@ -99,7 +99,7 @@ async function makePurchase(e) {
 }
 
 //PURCHASING ITEM / GENERATING CART
-async function purchaseItems(taret){
+async function purchaseItems(target){
   isProcessing = true;
   target.style.backgroundColor = "black"
   target.style.colour="white"
