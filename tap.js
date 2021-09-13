@@ -17,7 +17,7 @@ let socket = io("http://127.0.0.1:3000", {
 
 socket.on("newConnect", (data) => {
   socket.open();
-  console.log("New Server Connection", socket.id);
+  console.log("Socket connection to Server established", socket.id);
 })
 
 socket.on("disconnect", () => {
@@ -27,7 +27,7 @@ socket.on("disconnect", () => {
 
 socket.on("encryptedFingerPrint", (data) => {
   fingerprint = data
-  console.log("Fingerprint Encoded", fingerprint);
+  console.log("Fingerprint Encrypted...",fingerprint);
 })
 
 socket.on("error", (error) => {
@@ -38,7 +38,7 @@ socket.on("error", (error) => {
 
 socket.on("cartID", (data) => {
   cartID = data;
-  console.log("CARTID", cartID);
+  console.log("PROCESSING CART ID...", cartID);
 })
 
 socket.on("util", (data) => {
@@ -281,6 +281,7 @@ function getFingerprint() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
+      console.log("Fingerprint Unencrypted...",result.visitorId);
       socket.emit("encryptFingerPrint", result.visitorId)
     })
 }
