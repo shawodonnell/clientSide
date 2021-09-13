@@ -16,7 +16,6 @@ let socket = io("http://127.0.0.1:3000", {
 });
 
 socket.on("newConnect", (data) => {
-  console.log(data);
   socket.open();
   console.log("New Server Connection", socket.id);
 })
@@ -289,7 +288,9 @@ function getFingerprint() {
 //SOCKET reconnection
 async function reconnectSocket() {
   socket.open();
-  console.log("New Server Connection", socket.id);
+  if(socket.id){
+    console.log("Socket connected to Server", socket.id);
+  }  
 }
 
 //Checking if token exists on local domain 
