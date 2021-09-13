@@ -4,7 +4,7 @@ let token;
 let cartID;
 let isProcessing = false;
 let products = [];
-let quantity = 1 || document.querySelector("#product_quantity").value; 
+let quantity = 1 || document.querySelector("#product_quantity").value;
 
 //SOCKETS********************************************************
 
@@ -63,10 +63,10 @@ else {
 
 //EVENT FILTERING - validation on event and instance variables to determine process to follow
 async function makePurchase(e) {
-  e = e || window.event;//The Event itself
-  let target = e.target || e.srcElement; //The button itself  
+  e = e || window.event;//The Event object
+  let target = e.target || e.srcElement; //The triggering element  
 
-  if (target.className.match("tap_btn")) { //if button click was a tap_btn....
+  if (target.className.match("tap_btn")) { //if button click was a propagated button then continue...
 
     if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
       await retailLogin()
@@ -77,10 +77,10 @@ async function makePurchase(e) {
       target.disabled = true;
       target.style.backgroundColor = "yellow";
       setTimeout(() => {
-        deleteCart(target);
+        deleteCart();
       }, 750);
       return
-    } 
+    }
     //AMENDING FUNCTION
     else if (isProcessing && !target.classList.contains("initialPurchase")) {
       target.disabled = true;
@@ -89,39 +89,39 @@ async function makePurchase(e) {
         amendCart(target);
       }, 1500);
       return
-    } 
+    }
     //PURCHASING FUNCTION
     else {
-    purchaseItems(target)
-    return
+      purchaseItems(target)
+      return
     }
   }
 }
 
 //PURCHASING ITEM / GENERATING CART
-async function purchaseItems(target){
+async function purchaseItems(target) {
   isProcessing = true;
   target.style.backgroundColor = "black"
-  target.style.colour="white"
+  target.style.colour = "white"
   target.classList.add("inCart")
   target.classList.add("initialPurchase")
   target.disabled = true;
 
   setTimeout(async () => {
-    
+
     target.disabled = false;
     target.style.backgroundColor = "green"
 
-    product = {productID:target.id,quantity:quantity}
+    product = { productID: target.id, quantity: quantity }
     products.push(product);
-    
+
     await axios.post("http://127.0.0.1:3000/api/v1/cart", {
       fingerprint: fingerprint,
       token: token,
-      products:products
+      products: products
     }, { withCredentials: true })
       .then(response => {
-        console.log("Order Complete", response.data.response) 
+        console.log("Order Complete", response.data.response)
         localStorage.setItem("tap_user_token", response.data.response.token)
         alert(`Order Status: ${response.data.response.order}`)
         //receipt(response.data)
@@ -135,7 +135,7 @@ async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
 
-  product = {productID:target.id,quantity:quantity}
+  product = { productID: target.id, quantity: quantity }
   products.push(product);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
@@ -154,20 +154,18 @@ async function amendCart(target) {
 }
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
-async function deleteCart(target) {
+async function deleteCart() {
 
   if (!cartID) {
     console.log("No Cart ID so cant delete");
     return
   }
+
   await axios.delete("http://127.0.0.1:3000/api/v1/cart", {
     data: {
       cartID: cartID
     }
   })
-    .then(() => {
-      cartID = "";
-    })
     .catch(err => {
       console.log(err);
     })
@@ -299,7 +297,7 @@ function checkToken() {
   token = localStorage.getItem("tap_user_token");
 }
 
-//Generating the Buttons Dynamically 
+//Generating the Buttons Dynamically on retailers page
 function generateButtons() {
 
   try {
@@ -373,7 +371,6 @@ function generateButtons() {
     }
 
     function insertButtons(result) {
-      console.log(result);
 
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#")) {
@@ -403,11 +400,10 @@ window.addEventListener("load", function () {
   } catch (error) {
     alert(error)
   }
-
 })
 
 
-//ARCHIVE*****************
+//ARCHIVE*****************NOT USED
 //COOKIE
 function setCookie(token) {
   document.cookie = `WhyteGoodMan=${token}; SameSite=none; Secure; max-age=86400; Domain=127.0.0.1:3000; Path=/;`
@@ -417,7 +413,6 @@ function getToken() {
   return document.cookie.match("WhyteGoodMan").input.split("=")[1]
 }
 
-//function archive
 async function sleep(ms) {
   console.log("starting sleep...");
   return setTimeout(() => {
