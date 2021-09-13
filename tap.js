@@ -69,6 +69,7 @@ async function makePurchase(e) {
 
     if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
       await retailLogin()
+      return
     }
 
     //DELETING FUNCTION 
