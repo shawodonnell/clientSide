@@ -121,7 +121,8 @@ async function purchaseItems(target) {
       products: products
     }, { withCredentials: true })
       .then(response => {
-        console.log("Order Complete", response.data)
+        console.log("Order Complete")
+        console.log(response.data);
         localStorage.setItem("tap_user_token", response.data.response.token)
         alert(`Order Status: ${response.data.response.order}`)
         //receipt(response.data)
