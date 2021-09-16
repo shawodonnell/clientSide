@@ -218,9 +218,9 @@ async function registerUser() {
   })
     .then((response) => {      
       token = response.data.token;
-      alert("Registration Response:", response.data.message),
-      window.location.href = "https://shawodonnell.github.io/clientSide/products.html"
-      localStorage.setItem("tap_user_token", token)
+      alert(`Registration Response: ${response.data.message}`);
+      window.location.href = "https://shawodonnell.github.io/clientSide/products.html";
+      localStorage.setItem("tap_user_token", token);
     })
     .catch(err => console.log(err))
 
@@ -237,7 +237,7 @@ async function login(email, password) {
   })
     .then((response) => {
       console.log("Log in Response:", response),
-        token = response.data.token;
+      token = response.data.token;
       localStorage.setItem("tap_user_token", token)
     })
     .catch(err => console.log(err))
