@@ -135,8 +135,8 @@ async function purchaseItems(target) {
 async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
-
-  product = { productID: target.id, quantity: quantity }
+  products = []
+  product = {productID: target.id, quantity: quantity }
   products.push(product);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
@@ -172,7 +172,7 @@ async function deleteCart() {
     })
 }
 
-//*****LOGIN FUNCTIONS*****
+//*****USER FUNCTIONS*****
 //REGISTRATION - registering new users on the TAP website
 async function registerUser() {
   console.log("Form Submitted");
