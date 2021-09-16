@@ -216,9 +216,10 @@ async function registerUser() {
   await axios.post('http://127.0.0.1:3000/api/v1/users/register', {
     user
   })
-    .then((response) => {
-      console.log("Registration Response:", response.data.message),
-        token = response.data.token;
+    .then((response) => {      
+      token = response.data.token;
+      alert("Registration Response:", response.data.message),
+      window.location.href = "https://shawodonnell.github.io/clientSide/products.html"
       localStorage.setItem("tap_user_token", token)
     })
     .catch(err => console.log(err))
