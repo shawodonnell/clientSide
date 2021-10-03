@@ -380,7 +380,8 @@ function generateButtons() {
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#")) {
           let button = document.createElement('button')
-          button.innerText = "Buy"
+          button.innerText = "TAP"
+          button.style.fontFamily = "Arial"
           button.id = e.id
           button.classList.add("tap_btn");
           e.appendChild(button);
