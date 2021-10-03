@@ -199,15 +199,17 @@ async function registerUser() {
         cardBrand: regForm_cardBrand.value,
       }
     ],
-    preferences: [
-      {
-        category: regForm_prefCategory.value,
-        subCategory: regForm_prefSubCategory.value,
-        size: regForm_prefSize.value,
-        colour: regForm_prefColour.value
-      }
-    ]
+    preferences: preferenceArray
+    // [
+    //   {
+    //     category: regForm_prefCategory.value,
+    //     subCategory: regForm_prefSubCategory.value,
+    //     size: regForm_prefSize.value,
+    //     colour: regForm_prefColour.value
+    //   }
+    // ]
   }
+  console.log("USER",user);
 
   if (!user) {
     alert("Error with User Details")

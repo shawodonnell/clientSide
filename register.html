@@ -6,61 +6,252 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta placeholder="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Register</title>
 </head>
 
 <body>
-    <form method="POST" placeholder="register" id="regForm_register">
+    <header class="flex">
+        <h1>TAP Registration</h1>
+    </header>
+
+    <form method="POST" placeholder="register" class="flex" id="regForm_register">
         <!-- Customer Details -->
-        <input type="text" placeholder="firstName" id="regForm_firstName" required>
-        <input type="text" placeholder="lastName" id="regForm_lastName" required>
-        <input type="text" placeholder="email" id="regForm_email"  required >
-        <input type="text" placeholder="password" id="regForm_password" required >
-        <input type="text" placeholder="phone" id="regForm_phone" required >
-        <input type="text" placeholder="houseNumber" id="regForm_houseNumber" required >
-        <input type="text" placeholder="houseStreet" id="regForm_houseStreet" required >
-        <input type="text" placeholder="postCode" id="regForm_postCode" required >
-        <input type="text" placeholder="city" id="regForm_city" required >
-        <input type="text" placeholder="country" id="regForm_country" required >
-        <br>
-        <br>
-        <!-- Payment Details -->
-        <input type="text" placeholder="cardType" id="regForm_cardType" required >
-        <input type="text" placeholder="cardNumber" id="regForm_cardNumber" required >
-        <input type="text" placeholder="expMonth" id="regForm_expMonth" required >
-        <input type="text" placeholder="expYear" id="regForm_expYear" required >
-        <input type="text" placeholder="cvc" id="regForm_cvc" required >
-        <input type="text" placeholder="cardBrand" id="regForm_cardBrand" required >
-        <br>
-        <br>
-        <!-- Preference Details -->
-        <input type="text" placeholder="prefCategory" id="regForm_prefCategory" required >
-        <input type="text" placeholder="prefSubCategory" id="regForm_prefSubCategory" required >
-        <input type="text" placeholder="prefSize" id="regForm_prefSize" required >
-        <input type="text" placeholder="prefColour" id="regForm_prefColour" required >
-        <br>
-        <br>
+        <section class="flex personal">
+            <h3>Login Details</h3>
+            <input type="text" placeholder="Email" id="regForm_email" required>
+            <input type="text" placeholder="Password" id="regForm_password" required>
 
-        <input type="submit" id="regForm_submit" value="Submit">
+            <h3>Personal Details</h3>
+            <input type="text" placeholder="First Name" id="regForm_firstName" required>
+            <input type="text" placeholder="Surname" id="regForm_lastName" required>
+            <input type="text" placeholder="House Number" id="regForm_houseNumber" required>
+            <input type="text" placeholder="Street" id="regForm_houseStreet" required>
+            <input type="text" placeholder="Post Code" id="regForm_postCode" required>
+            <input type="text" placeholder="City" id="regForm_city" required>
+            <input type="text" placeholder="Country" id="regForm_country" required>
+            <input type="text" placeholder="Mobile Number" id="regForm_phone" required>
+            <br>
+            <input type="button" class="regButton" id="goToPayments" value="Enter Payment Details" />
+        </section>
 
+        <section class="flex payment hidden">
+            <h3>Payment Details</h3>
+            <input type="text" placeholder="Card, Klarna or Paypal?" id="regForm_cardType" required>
+            <input type="text" placeholder="Card Number" id="regForm_cardNumber" required>
+            <input type="text" placeholder="Expiry Month" id="regForm_expMonth" required>
+            <input type="text" placeholder="Expiry Year" id="regForm_expYear" required>
+            <input type="text" placeholder="CVC" id="regForm_cvc" required>
+            <input type="text" placeholder="Visa or Mastercard?" id="regForm_cardBrand" required>
+            <br>
+            <input type="button" class="regButton" id="goToPrefs" value="Enter Shopping Preferences" />
+        </section>
+
+        <section class="flex preference hidden">
+            <h3>Preference Details</h3>
+            <div class="flex" id="preferenceInput"></div>
+            <div class="prefUtil flex hidden">
+                <input type="button" class="regButton" id="addPeference" value="Add Preference">
+            </div>
+            <div class="utils hidden">
+                <input type="submit" class="regButton" id="regForm_submit" value="Register User">
+                <input type="reset" class="regButton" id="regForm_reset" value="Reset Form">
+            </div>
+        </section>
 
     </form>
-    
+
     <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"></script>
-    <script src="tap.js"></script>
     <script>
+
+        let preferenceArray = [];
+        let counter = 0;
+
+        document.querySelector("#goToPayments").addEventListener("click", () => {
+            toggleDisplay(document.querySelector(".payment"))
+        })
+
+        document.querySelector("#goToPrefs").addEventListener("click", () => {
+            toggleDisplay(document.querySelector(".preference"))
+            preferenceCategory()
+        })
+
+        document.querySelector("#addPeference").addEventListener("click", () => {
+            preference = {
+                prefId: counter,
+                category: document.querySelector("#regForm_prefCategory").value,
+                subCategory: document.querySelector("#regForm_prefSubCategory").value,
+                size: document.querySelector("#regForm_prefSize").value,
+                colour: document.querySelector("#regForm_prefColour").value
+            }
+            preferenceArray.push(preference);
+            counter++;
+
+            document.querySelector("#regForm_prefCategory").remove()
+            document.querySelector("#regForm_prefSubCategory").remove()
+            document.querySelector("#regForm_prefSize").remove()
+            document.querySelector("#regForm_prefColour").remove()
+            document.querySelector(".utils").classList.remove("hidden");
+            document.querySelector("#addPeference").value = "Add Another Preference"
+
+            parent = document.querySelector(".prefUtil")
+            div = document.createElement("div")
+            div.classList.add("preferenceItem")
+            div.innerText = `${preference.category} preference added: ${preference.subCategory}, ${preference.colour}, ${preference.size}`
+
+            button = document.createElement("button")
+            button.classList.add("preferenceButton")
+            button.title = "Delete this preference"
+            button.addEventListener("click",(e)=>{
+                for (let i = 0; i < preferenceArray.length; i++) {
+                    const element = preferenceArray[i];
+                    if(element.prefId == e.view.preference.prefId) {    
+                        preferenceArray.splice(i,1)
+                    }                    
+                }   
+                e.target.parentNode.remove()
+                console.log("POST FOR",preferenceArray);
+            })
+            button.innerText = "X"
+            
+            div.appendChild(button)
+            parent.prepend(div);
+
+            preferenceCategory();
+        })
+
         document.querySelector('#regForm_register').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
+                if (preferenceArray.length == 0) {
+                    preference = {
+                        category: document.querySelector("#regForm_prefCategory").value,
+                        subCategory: document.querySelector("#regForm_prefSubCategory").value,
+                        size: document.querySelector("#regForm_prefSize").value,
+                        colour: document.querySelector("#regForm_prefColour").value
+                    }
+                    preferenceArray.push(preference);
+                }
                 registerUser();
             } catch (error) {
                 alert(error)
             }
         })
+
+        function toggleDisplay(section) {
+            section.classList.remove("hidden")
+            section.scrollIntoView()
+        }
+
+        function preferenceCategory() {
+            parent = document.querySelector("#preferenceInput")
+            categorySelect = document.createElement("select")
+            categorySelect.id = `regForm_prefCategory`;
+            categorySelect.placeholder = "Card, Klarna or Paypal?"
+            categorySelect.required = true;
+            categoryArray = ["", "Footwear", "Tops", "Bottoms"]
+            for (let i = 0; i < categoryArray.length; i++) {
+                categoryOption = document.createElement("option")
+                categoryOption.value = categoryArray[i]
+                categoryOption.text = categoryArray[i]
+                categorySelect.appendChild(categoryOption)
+            }
+            parent.appendChild(categorySelect)
+            categorySelect.addEventListener("change", (e) => {
+                if (document.querySelector("#regForm_prefSubCategory") == null) {
+                    preferenceSubCategory(e.target.value)
+                } else {
+                    parent.removeChild(document.querySelector("#regForm_prefSubCategory"))
+                    preferenceSubCategory(e.target.value)
+                }
+            })
+        }
+
+        function preferenceSubCategory(selectedCategory) {
+            footwear = ["", "Shoes", "Sandles", "Trainers", "Boots"];
+            footwear.name = "footwear";
+            topwear = ["", "Jumper", "T-Shirt", "Shirt"];
+            topwear.name = "tops";
+            bottomwear = ["", "Trousers", "Jeans", "Joggers"];
+            bottomwear.name = "bottoms";
+            miscwear = ["", "Sunglasses", "Headband"];
+            miscwear.name = "miscwear";
+            sportswear = ["", "Swimming trunks", "Boxing Gloves"];
+            sportswear.name = "sportswear";
+            combined = [footwear, topwear, bottomwear, miscwear, sportswear]
+
+            combined.forEach(array => {
+                if (selectedCategory.toLowerCase() == array.name) {
+                    parent = document.querySelector("#preferenceInput")
+                    categorySelect = document.createElement("select")
+                    categorySelect.id = "regForm_prefSubCategory";
+                    categorySelect.placeholder = "Sub-Category"
+                    categorySelect.required = true;
+                    for (let i = 0; i < array.length; i++) {
+                        categoryOption = document.createElement("option")
+                        categoryOption.value = array[i]
+                        categoryOption.text = array[i]
+                        categorySelect.appendChild(categoryOption)
+                    }
+                    parent.appendChild(categorySelect)
+                    categorySelect.addEventListener("change", (e) => {
+                        if (document.querySelector("#regForm_prefColour") == null) {
+                            preferenceColour(e.target.value)
+                        } else {
+                            parent.removeChild(document.querySelector("#regForm_prefColour"))
+                            preferenceColour(e.target.value)
+                        }
+                    })
+                }
+            });
+        }
+
+        function preferenceColour() {
+            array = ["", "Red", "Green", "Blue"]
+            categorySelect = document.createElement("select")
+            categorySelect.id = "regForm_prefColour";
+            categorySelect.placeholder = "Colour"
+            categorySelect.required = true;
+            for (let i = 0; i < array.length; i++) {
+                categoryOption = document.createElement("option")
+                categoryOption.value = array[i]
+                categoryOption.text = array[i]
+                categorySelect.appendChild(categoryOption)
+            }
+            parent.appendChild(categorySelect)
+            categorySelect.addEventListener("change", (e) => {
+                if (document.querySelector("#regForm_prefSize") == null) {
+                    preferenceSize(e.target.value)
+                } else {
+                    parent.removeChild(document.querySelector("#regForm_prefSize"))
+                    preferenceSize(e.target.value)
+                }
+            })
+        }
+
+        function preferenceSize() {
+            array = ["", "8", "9", "10", "11", "12"]
+            categorySelect = document.createElement("select")
+            categorySelect.id = "regForm_prefSize";
+            categorySelect.placeholder = "Size"
+            categorySelect.required = true;
+            for (let i = 0; i < array.length; i++) {
+                categoryOption = document.createElement("option")
+                categoryOption.value = array[i]
+                categoryOption.text = array[i]
+                categorySelect.appendChild(categoryOption)
+            }
+            parent.appendChild(categorySelect)
+            categorySelect.addEventListener("change", (e) => {
+                document.querySelector(".prefUtil").classList.remove("hidden")
+            })
+        }
+
+
     </script>
+    <script src="tap.js"></script>
 
 </body>
 

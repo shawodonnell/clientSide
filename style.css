@@ -1,8 +1,21 @@
-.product_container{
+/* Shared Styling */
+.flex{
     display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+}
+
+.hidden {
+    display:none
+}
+
+::placeholder {
+    color: black;
+}
+
+/* PRODUCTS.HTML STYLING  */
+.product_container{
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
 }
 
 .product_card{
@@ -29,4 +42,64 @@ img{
     overflow-x: visible;    
     white-space: normal;
     word-wrap: break-word;
+}
+
+/* REGISTER.HTML STYLING */
+
+header{
+    height: 10vh;
+    background-color: whitesmoke;
+    min-width: 100vw;
+}
+
+section{
+    min-height: 100vh;
+    background-color: whitesmoke;
+    min-width: 100vw;
+}
+
+h3{
+    color: red;
+}
+
+#regForm_register {
+    flex-direction: column;    
+}
+
+.personal, .preference, .payment, #preferenceInput, .prefUtil{
+    flex-direction: column;
+    margin-top: 5vh;
+}
+
+input[type=text], select {
+    margin: 1vh;
+    width: 80vw;
+    padding: 1vh;
+}
+
+#addPeference{
+    margin-bottom: 2vh;
+}
+
+.preferenceItem {
+    background-color: burlywood;
+    padding:7px 15px;
+    margin: 1vh;
+}
+
+.preferenceButton {
+    margin-left: 1vw;
+}
+
+/* Button Style */
+
+.regButton {
+    background-color: black; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
