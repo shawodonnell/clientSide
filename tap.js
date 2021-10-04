@@ -370,7 +370,6 @@ function generateButtons() {
           count = resultsAncestors[i].count
           name = resultsAncestors[i].className
         }
-
       }
 
       if (name.includes(" ")) {
@@ -384,7 +383,7 @@ function generateButtons() {
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#" || "text")) {
           let button = document.createElement('button')
-          button.style.backgroundImage = "url('resources/blueBtn.png')"
+          button.style.backgroundImage = "url('../resources/blueBtn.png')"
           //button.style.fontFamily = "Arial"
           button.id = e.id
           button.classList.add("tap_btn");
