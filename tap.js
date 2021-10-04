@@ -337,8 +337,6 @@ function generateButtons() {
           resultsParsedArray.push(element)
         }
       });
-
-
     }
 
     //FILTER ARRAY by childNode Length
@@ -380,12 +378,13 @@ function generateButtons() {
     function insertButtons(result) {
 
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
-        if (!e.nodeName.includes("#")) {
+        if (!e.nodeName.includes("#" || "text")) {
           let button = document.createElement('button')
-          button.innerText = "TAP"
-          button.style.fontFamily = "Arial"
+          button.style.backgroundImage = "url('resources/blueBtn.png')"
+          //button.style.fontFamily = "Arial"
           button.id = e.id
           button.classList.add("tap_btn");
+          button.title = "TAP BUTTON"
           e.appendChild(button);
         }
 
