@@ -1,4 +1,8 @@
 /* Shared Styling */
+* {
+    margin: 0;
+    padding: 0;
+}
 .flex{
     display: flex;
     justify-content: flex-start;
@@ -46,36 +50,57 @@ img{
 
 /* REGISTER.HTML STYLING */
 
-header{
+.body {
+    background-color: #c00000;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+}
+
+#header{
     height: 10vh;
-    background-color: whitesmoke;
+    background-color: rgba(255, 255, 255, 1);
     min-width: 100vw;
+    justify-content: center;
 }
 
 section{
     min-height: 100vh;
-    background-color: whitesmoke;
-    min-width: 100vw;
+    background-color: rgba(255, 255, 255, 0.65);
+    min-width: 75vw;
+    border: 2px red solid;
+    border-radius: 25px;
+    box-shadow: 1vw 1vh 5px black;
 }
 
 h3{
+    margin: 1vh;
     color: red;
+    text-transform: uppercase;
+    text-decoration:underline;
 }
 
 #regForm_register {
     flex-direction: column;    
 }
 
-.personal, .preference, .payment, #preferenceInput, .prefUtil{
+.login, .personal, .preference, .payment, #preferenceInput, .prefUtil{
     flex-direction: column;
-    margin-top: 5vh;
+    margin-top: 3vh;
 }
 
 input[type=text], select {
     margin: 1vh;
-    width: 80vw;
+    width: 60vw;
     padding: 1vh;
+    border: 1px black solid;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px black;
 }
+
+input[type=text]:hover, select:hover, .regButton:hover {
+    filter: brightness(85%);
+    border: none;
+}
+
 
 #addPeference{
     margin-bottom: 2vh;
@@ -102,4 +127,12 @@ input[type=text], select {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    border: 1px red solid;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px black;
+}
+
+.regButton:active {
+    transform: translateY(3px);
+    border: none;
 }

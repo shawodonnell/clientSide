@@ -9,19 +9,27 @@
     <title>Register</title>
 </head>
 
-<body>
-    <header class="flex">
+<body class="body">
+    <header class="flex" id="header">
         <h1>TAP Registration</h1>
     </header>
 
     <form method="POST" placeholder="register" class="flex" id="regForm_register">
         <!-- Customer Details -->
-        <section class="flex personal">
-            <h3>Login Details</h3>
+        <section class="flex login">
+            <h3>Login</h3>
+            <input type="text" placeholder="Email" id="regForm_email_login" required>
+            <input type="text" placeholder="Password" id="regForm_password_login" required>
+            <div class="login">
+                <input type="button" class="regButton" id="loginBtn" value="Login Existing User" />
+                <input type="button" class="regButton" id="registerBtn" value="Register New User" />
+            </div>
+        </section>
+
+        <section class="flex personal hidden">
+            <h3>Personal Details</h3>
             <input type="text" placeholder="Email" id="regForm_email" required>
             <input type="text" placeholder="Password" id="regForm_password" required>
-
-            <h3>Personal Details</h3>
             <input type="text" placeholder="First Name" id="regForm_firstName" required>
             <input type="text" placeholder="Surname" id="regForm_lastName" required>
             <input type="text" placeholder="House Number" id="regForm_houseNumber" required>
@@ -32,6 +40,7 @@
             <input type="text" placeholder="Mobile Number" id="regForm_phone" required>
             <br>
             <input type="button" class="regButton" id="goToPayments" value="Enter Payment Details" />
+        
         </section>
 
         <section class="flex payment hidden">
@@ -68,6 +77,10 @@
 
         let preferenceArray = [];
         let counter = 0;
+
+        document.querySelector("#registerBtn").addEventListener("click", () => {
+            toggleDisplay(document.querySelector(".personal"))
+        })
 
         document.querySelector("#goToPayments").addEventListener("click", () => {
             toggleDisplay(document.querySelector(".payment"))
