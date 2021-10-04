@@ -27,7 +27,7 @@ socket.on("disconnect", () => {
 
 socket.on("encryptedFingerPrint", (data) => {
   fingerprint = data
-  console.log("Fingerprint Encrypted...",fingerprint);
+  console.log("Fingerprint Encrypted...", fingerprint);
 })
 
 socket.on("error", (error) => {
@@ -136,7 +136,7 @@ async function amendCart(target) {
   target.style.backgroundColor = "green";
   target.classList.add("inCart")
   products = []
-  product = {productID: target.id, quantity: quantity }
+  product = { productID: target.id, quantity: quantity }
   products.push(product);
 
   await axios.put("http://127.0.0.1:3000/api/v1/cart", {
@@ -209,7 +209,7 @@ async function registerUser() {
     //   }
     // ]
   }
-  console.log("USER",user);
+  console.log("USER", user);
 
   if (!user) {
     alert("Error with User Details")
@@ -218,7 +218,7 @@ async function registerUser() {
   await axios.post('http://127.0.0.1:3000/api/v1/users/register', {
     user
   })
-    .then((response) => {      
+    .then((response) => {
       token = response.data.token;
       alert(`Registration Response: ${response.data.message}`);
       window.location.href = "https://shawodonnell.github.io/clientSide/products.html";
@@ -239,7 +239,7 @@ async function login(email, password) {
   })
     .then((response) => {
       console.log("Log in Response:", response),
-      token = response.data.token;
+        token = response.data.token;
       localStorage.setItem("tap_user_token", token)
     })
     .catch(err => console.log(err))
@@ -286,7 +286,7 @@ function getFingerprint() {
   fpPromise
     .then(fp => fp.get())
     .then(result => {
-      console.log("Fingerprint Unencrypted...",result.visitorId);
+      console.log("Fingerprint Unencrypted...", result.visitorId);
       socket.emit("encryptFingerPrint", result.visitorId)
     })
 }
@@ -294,9 +294,9 @@ function getFingerprint() {
 //SOCKET reconnection
 async function reconnectSocket() {
   socket.open();
-  if(socket.id){
+  if (socket.id) {
     console.log("Socket connected to Server", socket.id);
-  }  
+  }
 }
 
 //Checking if token exists on local domain 
@@ -372,11 +372,14 @@ function generateButtons() {
         }
 
       }
+
+      if (name.includes(" ")) {
+        name = name.split(" ")
+      }
       parent = name;
     }
 
     function insertButtons(result) {
-      console.log(result);
 
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#" || "text")) {
