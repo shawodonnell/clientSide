@@ -385,7 +385,7 @@ function generateButtons() {
           let button = document.createElement('button')
           button.style.height = "33px"
           button.style.width = "33px"
-          button.style.backgroundImage = "url('../resources/blueBtn.png')"
+          button.style.backgroundImage = "url('https://raw.githubusercontent.com/shawodonnell/clientSide/main/resources/blueBtn.png')"
           button.style.objectFit = "contain"
           //button.style.fontFamily = "Arial"
           button.id = e.id
