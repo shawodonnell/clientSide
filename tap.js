@@ -383,7 +383,10 @@ function generateButtons() {
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#" || "text")) {
           let button = document.createElement('button')
+          button.style.height = "33px"
+          button.style.width = "33px"
           button.style.backgroundImage = "url('../resources/blueBtn.png')"
+          button.style.objectFit = "contain"
           //button.style.fontFamily = "Arial"
           button.id = e.id
           button.classList.add("tap_btn");
