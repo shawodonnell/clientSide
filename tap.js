@@ -376,6 +376,7 @@ function generateButtons() {
     }
 
     function insertButtons(result) {
+      console.log(result);
 
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#" || "text")) {
