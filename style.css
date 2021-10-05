@@ -18,12 +18,25 @@
 }
 
 /* PRODUCTS.HTML STYLING  */
+
+header{
+    margin: 2vh;
+    padding-top: 2vh;
+    text-decoration: underline;
+    text-align: center;
+}
+
+.products{
+    justify-content: center;
+}
 .product_container{
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .product_card{
-    margin-right: 25px;
+    margin-top: 5vh;
+    margin-right: 5vw;
     text-align: center;
     background-color: whitesmoke;
     border: 1px lightcyan solid;
