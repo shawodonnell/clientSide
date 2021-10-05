@@ -276,16 +276,25 @@ function resetElements() {
 
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
     if(btn.classList.contains("tap_btn_blue")){
+      console.log("RESETTING BLUE BUTTON");
       switchColours(btn,"tap_btn_blue","tap_btn_red")
     } else if(btn.classList.contains("tap_btn_green")){
+      console.log("RESETTING GREEN BUTTON");
       switchColours(btn,"tap_btn_green","tap_btn_red")
     } else if(btn.classList.contains("tap_btn_yellow")){
+      console.log("RESETTING YELLOW BUTTON");
       switchColours(btn,"tap_btn_yellow","tap_btn_red")
     }
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
     btn.disabled = false;
   })
+}
+
+//Swapping Button Colours
+function switchColours(target,class1,class2){  
+  target.classList.remove(class1);
+  target.classList.add(class2);
 }
 
 //FINGERPRINTING initialistion 
@@ -406,11 +415,7 @@ function generateButtons() {
   }
 }
 
-//Swapping Button Colours
-function switchColours(target,class1,class2){  
-  target.classList.remove(class1);
-  target.classList.add(class2);
-}
+
 
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
