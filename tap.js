@@ -67,15 +67,15 @@ async function makePurchase(e) {
 
   if (target.className.match("tap_btn")) { //if button click was a propagated button then continue...
 
-    if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
-      await retailLogin()
-      return
-    }
+    // if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
+    //   await retailLogin()
+    //   return
+    // }
 
     //DELETING FUNCTION 
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true;
-      target.style.backgroundColor = "yellow";
+      switchColours(target,"tap_btn_red","tap_btn_yellow")
       setTimeout(() => {
         deleteCart();
       }, 750);
@@ -101,8 +101,6 @@ async function makePurchase(e) {
 //PURCHASING ITEM / GENERATING CART
 async function purchaseItems(target) {
   isProcessing = true;
-  target.style.backgroundColor = "black"
-  target.style.colour = "white"
   target.classList.add("inCart")
   target.classList.add("initialPurchase")
   target.disabled = true;
@@ -110,7 +108,7 @@ async function purchaseItems(target) {
   setTimeout(async () => {
 
     target.disabled = false;
-    target.style.backgroundColor = "green"
+    switchColours(target,"tap_btn_yellow","tap_btn_green")
 
     product = { productID: target.id, quantity: quantity }
     products.push(product);
@@ -133,7 +131,7 @@ async function purchaseItems(target) {
 
 //AMENDING CART
 async function amendCart(target) {
-  target.style.backgroundColor = "green";
+  switchColours(target,"tap_btn_yellow","tap_btn_green")
   target.classList.add("inCart")
   products = []
   product = { productID: target.id, quantity: quantity }
@@ -156,9 +154,10 @@ async function amendCart(target) {
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
 async function deleteCart() {
-
+  switchColours(target,"tap_btn_yellow","tap_btn_blue")
   if (!cartID) {
     console.log("No Cart ID so cant delete");
+    resetElements();
     return
   }
 
@@ -260,6 +259,7 @@ async function retailLogin() {
 }
 
 //*****UTIL FUNCTIONS*****
+
 //AUDIO on button click
 function play() {
   var audio = document.getElementById("audio");
@@ -273,7 +273,13 @@ function resetElements() {
   cartID = "";
 
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
-    btn.style.backgroundColor = "red";
+    if(btn.classList.contains("tap_btn_blue")){
+      switchColours(btn,"tap_btn_blue","tap_btn_red")
+    } else if(btn.classList.contains("tap_btn_green")){
+      switchColours(btn,"tap_btn_green","tap_btn_red")
+    } else if(btn.classList.contains("tap_btn_yellow")){
+      switchColours(btn,"tap_btn_yellow","tap_btn_red")
+    }
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
     btn.disabled = false;
@@ -383,13 +389,9 @@ function generateButtons() {
       document.querySelector(`.${result}`).childNodes.forEach((e) => {
         if (!e.nodeName.includes("#" || "text")) {
           let button = document.createElement('button')
-          button.style.height = "33px"
-          button.style.width = "33px"
-          button.style.background = "url('https://raw.githubusercontent.com/shawodonnell/clientSide/main/resources/blueBtn.png')"
-          button.style.objectFit = "contain"
-          //button.style.fontFamily = "Arial"
           button.id = e.id
-          button.classList.add("tap_btn");
+          button.classList.add("tap_btn_style");
+          button.classList.add("tap_btn_red")
           button.title = "TAP BUTTON"
           e.appendChild(button);
         }
@@ -400,6 +402,12 @@ function generateButtons() {
   } catch (error) {
     console.log(error);
   }
+}
+
+//Swapping Button Colours
+function switchColours(target,class1,class2){  
+  target.classList.remove(class1);
+  target.classList.add(class2);
 }
 
 //EVENT LISTENERS*****************************************************

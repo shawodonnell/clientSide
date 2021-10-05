@@ -36,7 +36,31 @@ img{
     object-fit: contain;
 }
 
-.tap_btn{
+.tap_btn_style{
+    height: 33px;
+    width: 33px;    
+    background-position: center;
+    background-size: 32px 32px;
+    border: none;
+}
+
+.tap_btn_red {
+    background-image: url('resources/redBtn.png');
+}
+
+.tap_btn_blue {
+    background-image: url('resources/blueBtn.png');
+}
+
+.tap_btn_green {
+    background-image: url('resources/greenBtn.png');
+}
+
+.tap_btn_yellow {
+    background-image: url('resources/yellowBtn.png');
+}
+
+/* .tap_btn{
     text-align: center;
     height: 30px;
     width: 70px;
@@ -46,7 +70,7 @@ img{
     overflow-x: visible;    
     white-space: normal;
     word-wrap: break-word;
-}
+} */
 
 /* REGISTER.HTML STYLING */
 
