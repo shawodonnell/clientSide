@@ -77,7 +77,7 @@ async function makePurchase(e) {
       target.disabled = true;
       switchColours(target,"tap_btn_red","tap_btn_yellow")
       setTimeout(() => {
-        deleteCart();
+        deleteCart(target);
       }, 750);
       return
     }
@@ -153,7 +153,7 @@ async function amendCart(target) {
 }
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
-async function deleteCart() {
+async function deleteCart(target) {
   switchColours(target,"tap_btn_yellow","tap_btn_blue")
   if (!cartID) {
     console.log("No Cart ID so cant delete");
