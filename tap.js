@@ -67,10 +67,10 @@ async function makePurchase(e) {
 
   if (target.className.match("tap_btn")) { //if button click was a propagated button then continue...
 
-    // if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
-    //   await retailLogin()
-    //   return
-    // }
+    if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
+      await retailLogin()
+      return
+    }
 
     //DELETING FUNCTION 
     if (isProcessing && target.classList.contains("inCart")) {
