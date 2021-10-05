@@ -210,6 +210,7 @@ async function registerUser() {
     //   }
     // ]
   }
+  
   console.log("USER", user);
 
   if (!user) {
