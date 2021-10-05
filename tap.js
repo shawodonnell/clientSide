@@ -154,7 +154,13 @@ async function amendCart(target) {
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
 async function deleteCart(target) {
-  switchColours(target,"tap_btn_yellow","tap_btn_blue")
+  if(target.classList.contains("tap_btn_red")){
+    switchColours(target,"tap_btn_red","tap_btn_blue")
+  } else if(target.classList.contains("tap_btn_green")){
+    switchColours(target,"tap_btn_green","tap_btn_blue")
+  } else if(target.classList.contains("tap_btn_yellow")){
+    switchColours(target,"tap_btn_yellow","tap_btn_blue")
+  }
   if (!cartID) {
     console.log("No Cart ID so cant delete");
     resetElements();
@@ -174,7 +180,7 @@ async function deleteCart(target) {
 //*****USER FUNCTIONS*****
 //REGISTRATION - registering new users on the TAP website
 async function registerUser() {
-  console.log("Form Submitted");
+  console.log("Processing Registration...");
 
   const user = {
     firstName: regForm_firstName.value,
