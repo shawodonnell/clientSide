@@ -275,16 +275,10 @@ function resetElements() {
   cartID = "";
 
   Array.from(document.querySelectorAll(".inCart")).map((btn) => {
-    if(btn.classList.contains("tap_btn_blue")){
-      console.log("RESETTING BLUE BUTTON");
-      switchColours(btn,"tap_btn_blue","tap_btn_red")
-    } else if(btn.classList.contains("tap_btn_green")){
-      console.log("RESETTING GREEN BUTTON");
-      switchColours(btn,"tap_btn_green","tap_btn_red")
-    } else if(btn.classList.contains("tap_btn_yellow")){
-      console.log("RESETTING YELLOW BUTTON");
-      switchColours(btn,"tap_btn_yellow","tap_btn_red")
-    }
+    btn.classList.remove("tap_btn_blue")
+    btn.classList.remove("tap_btn_green")
+    btn.classList.remove("tap_btn_yellow")
+    btn.classList.add("tap_btn_red")
     btn.classList.remove("initialPurchase")
     btn.classList.remove("inCart")
     btn.disabled = false;
