@@ -415,41 +415,6 @@ function generateButtons() {
   }
 }
 
-async function loadService() {
-  let cdns = [
-    "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
-    "http://127.0.0.1:3000/socket.io/socket.io.js",
-    "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"
-  ]
-
-  for (const cdn of cdns) {
-    let script = document.createElement("script")
-    script.async = true
-    script.src = cdn
-    document.body.appendChild(script)
-    console.log("script appended");
-  }
-
-  setTimeout(() => {
-    getFingerprint();
-    checkToken();
-    reconnectSocket();
-    generateButtons();
-  }, 1000);
-
-}
-
-//EVENT LISTENERS*****************************************************
-window.addEventListener("load", function () {
-  try {
-    console.log("loading....");
-    loadService();
-  } catch (error) {
-    alert(error)
-  }
-})
-
 //REGISTER.HTML CODE*************************************************************
 
 footwear = ["", "Shoes", "Sandles", "Trainers", "Boots"];
@@ -642,8 +607,41 @@ function preferenceSize(selectedCategory) {
   })
 }
 
+//LOADING FUNCTIONS AND LISTENERS******************************************
+function loadService() {
+  let cdns = [
+    "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
+    "http://127.0.0.1:3000/socket.io/socket.io.js",
+    "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"
+  ]
 
+  for (const cdn of cdns) {
+    let script = document.createElement("script")
+    script.async = true
+    script.src = cdn
+    document.body.appendChild(script)
+    
+  }
+  console.log("scripts inserted");
+  setTimeout(() => {
+    getFingerprint();
+    reconnectSocket();
+    generateButtons();
+    checkToken();
+  }, 1000);
 
+}
+
+//EVENT LISTENERS*****************************************************
+window.addEventListener("load", function () {
+  try {
+    console.log("loading....");
+    loadService();
+  } catch (error) {
+    alert(error)
+  }
+})
 
 
 
