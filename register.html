@@ -18,8 +18,8 @@
         <!-- Customer Details -->
         <section class="flex login">
             <h3>Login</h3>
-            <input type="text" placeholder="Email" id="regForm_email_login" >
-            <input type="text" placeholder="Password" id="regForm_password_login" >
+            <input type="text" placeholder="Email" id="regForm_email_login">
+            <input type="text" placeholder="Password" id="regForm_password_login">
             <div class="login">
                 <input type="button" class="regButton" id="loginBtn" value="Login Existing User" />
                 <input type="button" class="regButton" id="registerBtn" value="Register New User" />
@@ -68,26 +68,8 @@
         </section>
 
     </form>
-
-    <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"></script>
+    <script src="tap.js"></script>
     <script>
-
-        footwear = ["", "Shoes", "Sandles", "Trainers", "Boots"];
-        footwear.name = "footwear";
-        topwear = ["", "Jumper", "TeeShirt", "Shirt","Polo"];
-        topwear.name = "top";
-        bottomwear = ["", "Trousers", "Jeans", "Joggers"];
-        bottomwear.name = "bottoms";
-        miscwear = ["", "Sunglasses", "Headband"];
-        miscwear.name = "miscwear";
-        sportswear = ["", "Swimming trunks", "Boxing Gloves"];
-        sportswear.name = "sportswear";
-        combined = [footwear, topwear, bottomwear, miscwear, sportswear]
-        let preferenceArray = [];
-        let counter = 0;
 
         document.querySelector("#registerBtn").addEventListener("click", () => {
             toggleDisplay(document.querySelector(".personal"))
@@ -103,184 +85,16 @@
         })
 
         document.querySelector("#addPeference").addEventListener("click", () => {
-            preference = {
-                prefId: counter,
-                category: document.querySelector("#regForm_prefCategory").value,
-                subCategory: document.querySelector("#regForm_prefSubCategory").value,
-                size: document.querySelector("#regForm_prefSize").value,
-                colour: document.querySelector("#regForm_prefColour").value
-            }
-            preferenceArray.push(preference);
-            counter++;
-
-            document.querySelector("#regForm_prefCategory").remove()
-            document.querySelector("#regForm_prefSubCategory").remove()
-            document.querySelector("#regForm_prefSize").remove()
-            document.querySelector("#regForm_prefColour").remove()
-            document.querySelector(".utils").classList.remove("hidden");
-            document.querySelector("#addPeference").value = "Add Another Preference"
-
-            parent = document.querySelector(".prefUtil")
-            div = document.createElement("div")
-            div.classList.add("preferenceItem")
-            div.innerText = `${preference.category} preference added: ${preference.subCategory}, ${preference.colour}, ${preference.size}`
-
-            button = document.createElement("button")
-            button.classList.add("preferenceButton")
-            button.title = "Delete this preference"
-            button.addEventListener("click", (e) => {
-                for (let i = 0; i < preferenceArray.length; i++) {
-                    const element = preferenceArray[i];
-                    if (element.prefId == e.view.preference.prefId) {
-                        preferenceArray.splice(i, 1)
-                    }
-                }
-                e.target.parentNode.remove()
-                console.log("POST FOR", preferenceArray);
-            })
-            button.innerText = "X"
-
-            div.appendChild(button)
-            parent.prepend(div);
-
-            preferenceCategory();
-        })
+            e.preventDefault();
+            addPreference()
+        })       
 
         document.querySelector('#regForm_register').addEventListener('submit', async (e) => {
             e.preventDefault();
-            try {
-                if (preferenceArray.length == 0) {
-                    preference = {
-                        category: document.querySelector("#regForm_prefCategory").value,
-                        subCategory: document.querySelector("#regForm_prefSubCategory").value,
-                        size: document.querySelector("#regForm_prefSize").value,
-                        colour: document.querySelector("#regForm_prefColour").value
-                    }
-                    preferenceArray.push(preference);
-                }
-                registerUser();
-            } catch (error) {
-                alert(error)
-            }
+            preferenceCheck()
         })
 
-        function toggleDisplay(section) {
-            section.classList.remove("hidden")
-            section.scrollIntoView(true)
-        }
-
-        function preferenceCategory() {
-            parent = document.querySelector("#preferenceInput")
-            categorySelect = document.createElement("select")
-            categorySelect.id = `regForm_prefCategory`;
-            categorySelect.placeholder = "Card, Klarna or Paypal?"
-            categoryArray = ["", "Footwear", "Top", "Bottom"]
-            for (let i = 0; i < categoryArray.length; i++) {
-                categoryOption = document.createElement("option")
-                categoryOption.value = categoryArray[i]
-                categoryOption.text = categoryArray[i]
-                categorySelect.appendChild(categoryOption)
-            }
-            parent.appendChild(categorySelect)
-            categorySelect.addEventListener("change", async (e) => {
-                if (document.querySelector("#regForm_prefSubCategory") == null) {
-                    await preferenceSubCategory(e.target.value)
-                    await preferenceSize(e.target.value)
-                } else {
-                    parent.removeChild(document.querySelector("#regForm_prefSubCategory"))
-                    await preferenceSubCategory(e.target.value)
-                    await preferenceSize(e.target.value)
-                }
-            })
-        }
-
-        function preferenceSubCategory(selectedCategory) {
-
-            combined.forEach(array => {
-                if (selectedCategory.toLowerCase() == array.name) {
-                    parent = document.querySelector("#preferenceInput")
-                    categorySelect = document.createElement("select")
-                    categorySelect.id = "regForm_prefSubCategory";
-                    categorySelect.placeholder = "Sub-Category"
-                    for (let i = 0; i < array.length; i++) {
-                        categoryOption = document.createElement("option")
-                        categoryOption.value = array[i]
-                        categoryOption.text = array[i]
-                        categorySelect.appendChild(categoryOption)
-                    }
-                    parent.appendChild(categorySelect)
-                    categorySelect.addEventListener("change", async (e) => {
-                        if (document.querySelector("#regForm_prefColour") == null) {
-                            await preferenceColour(e.target.value)
-                            return
-                        } else {
-                            parent.removeChild(document.querySelector("#regForm_prefColour"))
-                            await preferenceColour(e.target.value)
-                            return
-                        }
-                    })
-                }
-            });
-        }
-
-        function preferenceColour() {
-            array = ["", "Red", "Green", "Blue"]
-            categorySelect = document.createElement("select")
-            categorySelect.id = "regForm_prefColour";
-            categorySelect.placeholder = "Colour"
-            for (let i = 0; i < array.length; i++) {
-                categoryOption = document.createElement("option")
-                categoryOption.value = array[i]
-                categoryOption.text = array[i]
-                categorySelect.appendChild(categoryOption)
-            }
-            parent.appendChild(categorySelect)
-            return;
-            // categorySelect.addEventListener("change", (e) => {
-            //     if (document.querySelector("#regForm_prefSize") == null) {
-            //         preferenceSize(e.target.value)
-            //     } else {
-            //         parent.removeChild(document.querySelector("#regForm_prefSize"))
-            //         preferenceSize(e.target.value)
-            //     }
-            // })
-        }
-
-        function preferenceSize(selectedCategory) {
-            footSize = ["", "8", "9", "10", "11", "12"]
-            topSize = ["", "XS", "S", "M", "L", "XL", "XXL"]
-            let array;
-
-            switch (selectedCategory.toLowerCase()) {
-                case "footwear":
-                    array = footSize
-                    break;
-                case "top":
-                    array = topSize
-                    break;
-                default:
-                    break;
-            }
-
-            categorySelect = document.createElement("select")
-            categorySelect.id = "regForm_prefSize";
-            categorySelect.placeholder = "Size"
-
-            for (let i = 0; i < array.length; i++) {
-                categoryOption = document.createElement("option")
-                categoryOption.value = array[i]
-                categoryOption.text = array[i]
-                categorySelect.appendChild(categoryOption)
-            }
-            parent.appendChild(categorySelect)
-            categorySelect.addEventListener("change", (e) => {
-                document.querySelector(".prefUtil").classList.remove("hidden")
-            })
-        }
-
-
     </script>
-    <script src="tap.js"></script>
 
 </body>
 

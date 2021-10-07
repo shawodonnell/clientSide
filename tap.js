@@ -8,47 +8,52 @@ let quantity = 1 || document.querySelector("#product_quantity").value;
 
 //SOCKETS********************************************************
 
-let socket = io("http://127.0.0.1:3000", {
-  forceNew: true,
-  reconnection: false,
-  autoConnect: false,
-  timeout: 5000,
-});
+try {
+  let socket = io("http://127.0.0.1:3000", {
+    forceNew: true,
+    reconnection: false,
+    autoConnect: false,
+    timeout: 5000,
+  });
 
-socket.on("newConnect", (data) => {
-  socket.open();
-  console.log("Socket connection to Server established", socket.id);
-})
+  socket.on("newConnect", (data) => {
+    socket.open();
+    console.log("Socket connection to Server established", socket.id);
+  })
 
-socket.on("disconnect", () => {
-  console.log("Client socket disconnected");
-  socket.open();
-})
+  socket.on("disconnect", () => {
+    console.log("Client socket disconnected");
+    socket.open();
+  })
 
-socket.on("encryptedFingerPrint", (data) => {
-  fingerprint = data
-  console.log("Fingerprint Encrypted...", fingerprint);
-})
+  socket.on("encryptedFingerPrint", (data) => {
+    fingerprint = data
+    console.log("Fingerprint Encrypted...", fingerprint);
+  })
 
-socket.on("error", (error) => {
-  alert(error)
+  socket.on("error", (error) => {
+    alert(error)
+    console.log(error);
+    resetElements();
+  })
+
+  socket.on("cartID", (data) => {
+    cartID = data;
+    console.log("PROCESSING CART ID...", cartID);
+  })
+
+  socket.on("util", (data) => {
+    console.log(data);
+  })
+
+  socket.on("response", (data) => {
+    console.log(data);
+    resetElements()
+  })
+} catch (error) {
   console.log(error);
-  resetElements();
-})
+}
 
-socket.on("cartID", (data) => {
-  cartID = data;
-  console.log("PROCESSING CART ID...", cartID);
-})
-
-socket.on("util", (data) => {
-  console.log(data);
-})
-
-socket.on("response", (data) => {
-  console.log(data);
-  resetElements()
-})
 
 //*****CART SECTION*****
 //EVENT DELEGATION - Listens for click/onclick events on the webpage depending on browser, and if triggered then calls the makePurchase function.
@@ -75,7 +80,7 @@ async function makePurchase(e) {
     //DELETING FUNCTION 
     if (isProcessing && target.classList.contains("inCart")) {
       target.disabled = true;
-      switchColours(target,"tap_btn_red","tap_btn_yellow")
+      switchColours(target, "tap_btn_red", "tap_btn_yellow")
       setTimeout(() => {
         deleteCart(target);
       }, 750);
@@ -108,7 +113,7 @@ async function purchaseItems(target) {
   setTimeout(async () => {
 
     target.disabled = false;
-    switchColours(target,"tap_btn_yellow","tap_btn_green")
+    switchColours(target, "tap_btn_yellow", "tap_btn_green")
 
     product = { productID: target.id, quantity: quantity }
     products.push(product);
@@ -131,7 +136,7 @@ async function purchaseItems(target) {
 
 //AMENDING CART
 async function amendCart(target) {
-  switchColours(target,"tap_btn_yellow","tap_btn_green")
+  switchColours(target, "tap_btn_yellow", "tap_btn_green")
   target.classList.add("inCart")
   products = []
   product = { productID: target.id, quantity: quantity }
@@ -154,7 +159,7 @@ async function amendCart(target) {
 
 //DELETING CART AND ITEMS FROM DATABASE AND STOPPING CART FROM COMPLETING 
 async function deleteCart(target) {
-  
+
   if (!cartID) {
     console.log("No Cart ID so cant delete");
     resetElements();
@@ -165,7 +170,7 @@ async function deleteCart(target) {
     data: {
       cartID: cartID
     }
-  }).then(()=>{
+  }).then(() => {
     alert("Purchase Cancelled")
   })
     .catch(err => {
@@ -210,7 +215,7 @@ async function registerUser() {
     //   }
     // ]
   }
-  
+
   console.log("USER", user);
 
   if (!user) {
@@ -287,7 +292,7 @@ function resetElements() {
 }
 
 //Swapping Button Colours
-function switchColours(target,class1,class2){  
+function switchColours(target, class1, class2) {
   target.classList.remove(class1);
   target.classList.add(class2);
 }
@@ -410,20 +415,237 @@ function generateButtons() {
   }
 }
 
+async function loadService() {
+  let cdns = [
+    "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
+    "http://127.0.0.1:3000/socket.io/socket.io.js",
+    "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"
+  ]
 
+  for (const cdn of cdns) {
+    let script = document.createElement("script")
+    script.async = true
+    script.src = cdn
+    document.body.appendChild(script)
+    console.log("script appended");
+  }
+
+  setTimeout(() => {
+    getFingerprint();
+    checkToken();
+    reconnectSocket();
+    generateButtons();
+  }, 1000);
+
+}
 
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
-    checkToken();
-    reconnectSocket();
-    getFingerprint();
-    generateButtons();
+    loadService();
   } catch (error) {
     alert(error)
   }
 })
+
+//REGISTER.HTML CODE*************************************************************
+
+footwear = ["", "Shoes", "Sandles", "Trainers", "Boots"];
+footwear.name = "footwear";
+topwear = ["", "Jumper", "TeeShirt", "Shirt", "Polo"];
+topwear.name = "top";
+bottomwear = ["", "Trousers", "Jeans", "Joggers"];
+bottomwear.name = "bottoms";
+miscwear = ["", "Sunglasses", "Headband"];
+miscwear.name = "miscwear";
+sportswear = ["", "Swimming trunks", "Boxing Gloves"];
+sportswear.name = "sportswear";
+combined = [footwear, topwear, bottomwear, miscwear, sportswear]
+let preferenceArray = [];
+let counter = 0;
+
+function addPreference() {
+  preference = {
+    prefId: counter,
+    category: document.querySelector("#regForm_prefCategory").value,
+    subCategory: document.querySelector("#regForm_prefSubCategory").value,
+    size: document.querySelector("#regForm_prefSize").value,
+    colour: document.querySelector("#regForm_prefColour").value
+  }
+  preferenceArray.push(preference);
+  counter++;
+
+  document.querySelector("#regForm_prefCategory").remove()
+  document.querySelector("#regForm_prefSubCategory").remove()
+  document.querySelector("#regForm_prefSize").remove()
+  document.querySelector("#regForm_prefColour").remove()
+  document.querySelector(".utils").classList.remove("hidden");
+  document.querySelector("#addPeference").value = "Add Another Preference"
+
+  parent = document.querySelector(".prefUtil")
+  div = document.createElement("div")
+  div.classList.add("preferenceItem")
+  div.innerText = `${preference.category} preference added: ${preference.subCategory}, ${preference.colour}, ${preference.size}`
+
+  button = document.createElement("button")
+  button.classList.add("preferenceButton")
+  button.title = "Delete this preference"
+  button.addEventListener("click", (e) => {
+    for (let i = 0; i < preferenceArray.length; i++) {
+      const element = preferenceArray[i];
+      if (element.prefId == e.view.preference.prefId) {
+        preferenceArray.splice(i, 1)
+      }
+    }
+    e.target.parentNode.remove()
+    console.log("POST FOR", preferenceArray);
+  })
+  button.innerText = "X"
+
+  div.appendChild(button)
+  parent.prepend(div);
+
+  preferenceCategory();
+
+}
+
+function preferenceCheck() {
+  try {
+    if (preferenceArray.length == 0) {
+      preference = {
+        category: document.querySelector("#regForm_prefCategory").value,
+        subCategory: document.querySelector("#regForm_prefSubCategory").value,
+        size: document.querySelector("#regForm_prefSize").value,
+        colour: document.querySelector("#regForm_prefColour").value
+      }
+      preferenceArray.push(preference);
+    }
+    registerUser();
+  } catch (error) {
+    alert(error)
+  }
+}
+
+function toggleDisplay(section) {
+  section.classList.remove("hidden")
+  section.scrollIntoView(true)
+}
+
+function preferenceCategory() {
+  parent = document.querySelector("#preferenceInput")
+  categorySelect = document.createElement("select")
+  categorySelect.id = `regForm_prefCategory`;
+  categorySelect.placeholder = "Card, Klarna or Paypal?"
+  categoryArray = ["", "Footwear", "Top", "Bottom"]
+  for (let i = 0; i < categoryArray.length; i++) {
+    categoryOption = document.createElement("option")
+    categoryOption.value = categoryArray[i]
+    categoryOption.text = categoryArray[i]
+    categorySelect.appendChild(categoryOption)
+  }
+  parent.appendChild(categorySelect)
+  categorySelect.addEventListener("change", async (e) => {
+    if (document.querySelector("#regForm_prefSubCategory") == null) {
+      await preferenceSubCategory(e.target.value)
+      await preferenceSize(e.target.value)
+    } else {
+      parent.removeChild(document.querySelector("#regForm_prefSubCategory"))
+      await preferenceSubCategory(e.target.value)
+      await preferenceSize(e.target.value)
+    }
+  })
+}
+
+function preferenceSubCategory(selectedCategory) {
+
+  combined.forEach(array => {
+    if (selectedCategory.toLowerCase() == array.name) {
+      parent = document.querySelector("#preferenceInput")
+      categorySelect = document.createElement("select")
+      categorySelect.id = "regForm_prefSubCategory";
+      categorySelect.placeholder = "Sub-Category"
+      for (let i = 0; i < array.length; i++) {
+        categoryOption = document.createElement("option")
+        categoryOption.value = array[i]
+        categoryOption.text = array[i]
+        categorySelect.appendChild(categoryOption)
+      }
+      parent.appendChild(categorySelect)
+      categorySelect.addEventListener("change", async (e) => {
+        if (document.querySelector("#regForm_prefColour") == null) {
+          await preferenceColour(e.target.value)
+          return
+        } else {
+          parent.removeChild(document.querySelector("#regForm_prefColour"))
+          await preferenceColour(e.target.value)
+          return
+        }
+      })
+    }
+  });
+}
+
+function preferenceColour() {
+  array = ["", "Red", "Green", "Blue"]
+  categorySelect = document.createElement("select")
+  categorySelect.id = "regForm_prefColour";
+  categorySelect.placeholder = "Colour"
+  for (let i = 0; i < array.length; i++) {
+    categoryOption = document.createElement("option")
+    categoryOption.value = array[i]
+    categoryOption.text = array[i]
+    categorySelect.appendChild(categoryOption)
+  }
+  parent.appendChild(categorySelect)
+  return;
+  // categorySelect.addEventListener("change", (e) => {
+  //     if (document.querySelector("#regForm_prefSize") == null) {
+  //         preferenceSize(e.target.value)
+  //     } else {
+  //         parent.removeChild(document.querySelector("#regForm_prefSize"))
+  //         preferenceSize(e.target.value)
+  //     }
+  // })
+}
+
+function preferenceSize(selectedCategory) {
+  footSize = ["", "8", "9", "10", "11", "12"]
+  topSize = ["", "XS", "S", "M", "L", "XL", "XXL"]
+  let array;
+
+  switch (selectedCategory.toLowerCase()) {
+    case "footwear":
+      array = footSize
+      break;
+    case "top":
+      array = topSize
+      break;
+    default:
+      break;
+  }
+
+  categorySelect = document.createElement("select")
+  categorySelect.id = "regForm_prefSize";
+  categorySelect.placeholder = "Size"
+
+  for (let i = 0; i < array.length; i++) {
+    categoryOption = document.createElement("option")
+    categoryOption.value = array[i]
+    categoryOption.text = array[i]
+    categorySelect.appendChild(categoryOption)
+  }
+  parent.appendChild(categorySelect)
+  categorySelect.addEventListener("change", (e) => {
+    document.querySelector(".prefUtil").classList.remove("hidden")
+  })
+}
+
+
+
+
+
 
 
 //ARCHIVE*****************NOT USED
