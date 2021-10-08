@@ -173,8 +173,8 @@ input[type=text]:hover, select:hover, .regButton:hover {
     position: fixed;
     z-index: 30;
     height: 30vh;
-    width: 30vw;
-    background-image: linear-gradient(rgb(201,25,34),rgb(105, 20, 24));
+    min-width: 230px;
+    background-image: linear-gradient(rgba(172, 45, 52, 0.75),rgba(105, 20, 24,0.75));
     border-radius: 8px;
     box-shadow: 5px 2px 9px black;
 }
