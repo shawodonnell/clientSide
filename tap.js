@@ -614,48 +614,62 @@ function generateModal() {
   headerDiv = document.createElement("div")
   logoDiv = document.createElement("div")
   titleDiv = document.createElement("div")
-  headerDiv.append(logoDiv,titleDiv)
+  headerDiv.append(logoDiv, titleDiv)
   headerDiv.classList.add("modalHeader")
-  logoDiv.classList.add("logo","tap_btn_red")
+  logoDiv.classList.add("logo", "tap_btn_red")
   titleDiv.classList.add("title")
   titleDiv.innerText = "TAP"
 
   //BODY
   bodyDiv = document.createElement("div")
-  p1= document.createElement("p")
-  p2= document.createElement("p")
-  bodyDiv.classList.add("modalBody")   
-  parentDiv.append(headerDiv,bodyDiv)
+  p1 = document.createElement("p")
+  p2 = document.createElement("p")
+  bodyDiv.classList.add("modalBody")
+  parentDiv.append(headerDiv, bodyDiv)
   parentDiv.classList.add("dialog")
+
+  //PLACEMENT
+  p1.classList.add("modalLine")
+  p1.innerText = "Purchase Initiated..."
+  bodyDiv.append(p1)
+  bodyDiv.append(p2)
   document.querySelector(".login").append(parentDiv)
 
   //TIMEOUTS
-  setTimeout(() => {
-      p1.classList.add("modalLine")
-      p1.innerText = "Purchase Initiated..."
-      bodyDiv.append(p1)
-      bodyDiv.append(p2)
-  }, 500);
-
-  setTimeout(() => {
-      p2.classList.add("modalLine", "p2")
-      p1.innerText = "Matching Preferences..."
-      p2.innerText = "Size: M  Color: Blue"
-  }, 2500);
-
-  setTimeout(() => {
-    p1.innerText = "Processing Payment..."
-    p2.innerText = "Card Ending: 1234"
-  }, 5000);
-
-  setTimeout(() => {
-    p2.remove();
-    p1.innerText = "Purchase Completed"
-  }, 7000);
-
-  setTimeout(() => {
-      parentDiv.id = "hidden"
-  }, 9000);   
+  let timerCounter = 0;
+  let timer = setInterval(() => {
+    switch (timerCounter) {
+      case 0:
+        p2.classList.add("modalLine", "p2")
+        p1.innerText = "Matching Preferences..."
+        p2.innerText = "Size: M  Color: Blue"
+        timerCounter++
+        break;
+      case 1:
+        p1.innerText = "5 Minute Timer started"
+        p2.innerHTML = "Green Button to Cancel"
+        timerCounter++
+        break;
+      case 2:
+        p1.innerText = "Processing Payment..."
+        p2.innerText = "Card Ending: 1234"
+        timerCounter++
+        break;
+      case 3:
+        p2.remove();
+        p1.innerText = "Purchase Completed"
+        timerCounter++
+        break;
+      case 4:
+        parentDiv.id = "hidden"
+        timerCounter++
+        break;
+      default:
+        timerCounter=0;
+        clearInterval(timer)
+        break;
+    }
+  }, 4000);
 }
 
 //LOADING FUNCTIONS AND LISTENERS******************************************
@@ -672,7 +686,7 @@ function loadService() {
     script.async = true
     script.src = cdn
     document.body.appendChild(script)
-    
+
   }
   console.log("scripts inserted");
   setTimeout(() => {
