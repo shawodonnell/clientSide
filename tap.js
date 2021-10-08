@@ -624,7 +624,6 @@ function generateModal() {
   bodyDiv = document.createElement("div")
   p1= document.createElement("p")
   p2= document.createElement("p")
-  p3= document.createElement("p")
   bodyDiv.classList.add("modalBody")   
   parentDiv.append(headerDiv,bodyDiv)
   parentDiv.classList.add("dialog")
@@ -635,24 +634,23 @@ function generateModal() {
       p1.classList.add("modalLine")
       p1.innerText = "Purchase Initiated..."
       bodyDiv.append(p1)
+      bodyDiv.append(p2)
   }, 500);
 
   setTimeout(() => {
       p2.classList.add("modalLine", "p2")
-      p2.innerText = "Checking Stock..."
-      bodyDiv.append(p2)
+      p1.innerText = "Matching Preferences..."
+      p2.innerText = "Size: M  Color: Blue"
   }, 2500);
 
   setTimeout(() => {
-      p3.classList.add("modalLine", "p3")
-      p3.innerText = "Matching Preferences..."
-      bodyDiv.append(p3)
+    p1.innerText = "Processing Payment..."
+    p2.innerText = "Card Ending: 1234"
   }, 5000);
 
   setTimeout(() => {
-      p3.remove()
-      p2.remove()
-      p1.innerText = "Purchase Completed"
+    p2.remove();
+    p1.innerText = "Purchase Completed"
   }, 7000);
 
   setTimeout(() => {

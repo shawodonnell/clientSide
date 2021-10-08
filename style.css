@@ -172,8 +172,8 @@ input[type=text]:hover, select:hover, .regButton:hover {
 .dialog{
     position: fixed;
     z-index: 30;
-    height: 35vh;
-    width: 30vw;  
+    height: 30vh;
+    width: 30vw;
     background-color: whitesmoke;
     border-radius: 8px;
     box-shadow: 5px 2px 9px black;
