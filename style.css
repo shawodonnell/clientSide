@@ -170,11 +170,15 @@ input[type=text]:hover, select:hover, .regButton:hover {
 /* Modal Style */
 
 .dialog{
-    position: fixed;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     z-index: 30;
     height: 30vh;
     min-width: 230px;
-    background-image: linear-gradient(rgba(172, 45, 52, 0.75),rgba(105, 20, 24,0.75));
+    /* background-image: linear-gradient(rgba(172, 45, 52, 0.75),rgba(105, 20, 24,0.75)); */
+    background-color: white;
     border-radius: 8px;
     box-shadow: 5px 2px 9px black;
 }
@@ -200,7 +204,7 @@ input[type=text]:hover, select:hover, .regButton:hover {
 
 .title{
     font-size: 1.7rem;
-    color: white;
+    color: red;
 }
 
 .modalBody * {
@@ -212,5 +216,5 @@ input[type=text]:hover, select:hover, .regButton:hover {
     padding: 1vh;
     margin: 0.5vh;
     font-family: 'Poppins', sans-serif;
-    color: white;
+    color: black;
 }

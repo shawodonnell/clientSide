@@ -72,10 +72,10 @@ async function makePurchase(e) {
 
   if (target.className.match("tap_btn")) { //if button click was a propagated button then continue...
 
-    if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
-      await retailLogin()
-      return
-    }
+    // if (!token) { //if token has been set - this means that the customer has logged in or the token has been saved by previous session
+    //   await retailLogin()
+    //   return
+    // }
 
     //DELETING FUNCTION 
     if (isProcessing && target.classList.contains("inCart")) {
@@ -105,8 +105,8 @@ async function makePurchase(e) {
 
 //PURCHASING ITEM / GENERATING CART
 async function purchaseItems(target) {
-  generateModal();
-  
+  generateModal(target);
+
   isProcessing = true;
   target.classList.add("inCart")
   target.classList.add("initialPurchase")
@@ -635,7 +635,7 @@ function generateModal() {
   p1.innerText = "Purchase Initiated..."
   bodyDiv.append(p1)
   bodyDiv.append(p2)
-  document.querySelector(".login").append(parentDiv)
+  document.body.append(parentDiv)
 
   //TIMEOUTS
   let timerCounter = 0;
