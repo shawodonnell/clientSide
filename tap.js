@@ -607,6 +607,59 @@ function preferenceSize(selectedCategory) {
   })
 }
 
+function generateModal() {
+  parentDiv = document.createElement("div")
+
+  //HEADER
+  headerDiv = document.createElement("div")
+  logoDiv = document.createElement("div")
+  titleDiv = document.createElement("div")
+  headerDiv.append(logoDiv,titleDiv)
+  headerDiv.classList.add("modalHeader")
+  logoDiv.classList.add("logo","tap_btn_red")
+  titleDiv.classList.add("title")
+  titleDiv.innerText = "TAP"
+
+  //BODY
+  bodyDiv = document.createElement("div")
+  p1= document.createElement("p")
+  p2= document.createElement("p")
+  p3= document.createElement("p")
+  bodyDiv.classList.add("modalBody")   
+  parentDiv.append(headerDiv,bodyDiv)
+  parentDiv.classList.add("dialog")
+  document.querySelector(".login").append(parentDiv)
+
+  //TIMEOUTS
+  setTimeout(() => {
+      p1.classList.add("modalLine")
+      p1.innerText = "Purchase Initiated..."
+      bodyDiv.append(p1)
+  }, 500);
+
+  setTimeout(() => {
+      p2.classList.add("modalLine", "p2")
+      p2.innerText = "Checking Stock..."
+      bodyDiv.append(p2)
+  }, 2500);
+
+  setTimeout(() => {
+      p3.classList.add("modalLine", "p3")
+      p3.innerText = "Matching Preferences..."
+      bodyDiv.append(p3)
+  }, 5000);
+
+  setTimeout(() => {
+      p3.remove()
+      p2.remove()
+      p1.innerText = "Purchase Completed"
+  }, 7000);
+
+  setTimeout(() => {
+      parentDiv.id = "hidden"
+  }, 9000);   
+}
+
 //LOADING FUNCTIONS AND LISTENERS******************************************
 function loadService() {
   let cdns = [

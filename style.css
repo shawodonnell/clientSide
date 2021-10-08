@@ -1,4 +1,6 @@
 /* Shared Styling */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +11,7 @@
     align-items: center; 
 }
 
-.hidden {
+.hidden, #hidden {
     display:none
 }
 
@@ -163,4 +165,52 @@ input[type=text]:hover, select:hover, .regButton:hover {
 .regButton:active {
     transform: translateY(3px);
     border: none;
+}
+
+/* Modal Style */
+
+.dialog{
+    position: fixed;
+    z-index: 30;
+    height: 35vh;
+    width: 30vw;  
+    background-color: whitesmoke;
+    border-radius: 8px;
+    box-shadow: 5px 2px 9px black;
+}
+
+.logo{
+    height: 50px;
+    width: 50px;
+    background-position: center;
+    background-size: cover;
+    margin: 1vh 0;
+}
+
+.modalHeader{
+    font-size: 2rem;
+    border-radius: 8px;
+    background-color: rgba(201,25,34,255);
+    padding-bottom: 2vh;
+    margin: 1vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.title{
+    font-size: 1.7rem;
+    color: white;
+}
+
+.modalBody * {
+    text-align: center;
+    border-radius: 8px;
+}
+
+.modalLine{
+    padding: 1vh;
+    margin: 0.5vh;
+    font-family: 'Poppins', sans-serif;
 }
