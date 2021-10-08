@@ -106,6 +106,7 @@ async function makePurchase(e) {
 //PURCHASING ITEM / GENERATING CART
 async function purchaseItems(target) {
   generateModal();
+  
   isProcessing = true;
   target.classList.add("inCart")
   target.classList.add("initialPurchase")
