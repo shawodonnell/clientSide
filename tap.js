@@ -8,7 +8,6 @@ let quantity = 1 || document.querySelector("#product_quantity").value;
 
 //SOCKETS********************************************************
 
-try {
   let socket = io("http://127.0.0.1:3000", {
     forceNew: true,
     reconnection: false,
@@ -50,10 +49,6 @@ try {
     console.log(data);
     resetElements()
   })
-} catch (error) {
-  console.log(error);
-}
-
 
 //*****CART SECTION*****
 //EVENT DELEGATION - Listens for click/onclick events on the webpage depending on browser, and if triggered then calls the makePurchase function.
