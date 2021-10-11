@@ -172,39 +172,36 @@ input[type=text]:hover, select:hover, .regButton:hover {
 .dialog{
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: 15%;
+    transform: translate(-50%, -5%);
     z-index: 30;
     height: 30vh;
     min-width: 230px;
     /* background-image: linear-gradient(rgba(172, 45, 52, 0.75),rgba(105, 20, 24,0.75)); */
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     box-shadow: 5px 2px 9px black;
 }
 
-.logo{
-    height: 50px;
-    width: 50px;
-    background-position: center;
-    background-size: cover;
-    margin: 1vh 0;
+.modalHeader{
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
 }
 
-.modalHeader{
-    font-size: 2rem;
-    border-radius: 8px;
-    padding-bottom: 2vh;
-    margin: 1vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.logo{
+    height: 30px;
+    width: 30px;
+    background-size: cover;
+    margin:1vh;
 }
 
 .title{
     font-size: 1.7rem;
     color: red;
+    position: relative;
 }
 
 .modalBody * {

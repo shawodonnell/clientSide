@@ -609,7 +609,38 @@ function preferenceSize(selectedCategory) {
   })
 }
 
-function generateModal() {
+function newModal(button){
+  modalContainer = document.createElement("div")
+  modalHead = document.createElement("div")
+  modalFoot = document.createElement("div")
+
+  //BODY
+  modalBody = document.createElement("div")
+  productContainer = document.createElement("div")
+  product
+  retailer
+  visaImg
+  cardNumber
+  prefContainer
+  colour
+  size
+  right
+
+  modalImage = document.createElement("div")
+  productImg
+  
+  modalSide = document.createElement("div")
+  price
+  data
+  time
+
+
+
+}
+
+
+
+function generateModal(button) {
   parentDiv = document.createElement("div")
 
   //HEADER
@@ -620,21 +651,29 @@ function generateModal() {
   headerDiv.classList.add("modalHeader")
   logoDiv.classList.add("logo", "tap_btn_red")
   titleDiv.classList.add("title")
-  titleDiv.innerText = "TAP"
+  titleDiv.innerText = "TAP CART"
 
   //BODY
   bodyDiv = document.createElement("div")
   p1 = document.createElement("p")
   p2 = document.createElement("p")
   bodyDiv.classList.add("modalBody")
+  p1.classList.add("modalLine", "p1")
+  p2.classList.add("modalLine","p2");
   parentDiv.append(headerDiv, bodyDiv)
   parentDiv.classList.add("dialog")
 
   //PLACEMENT
-  p1.classList.add("modalLine")
   p1.innerText = "Purchase Initiated..."
-  bodyDiv.append(p1)
-  bodyDiv.append(p2)
+  if(button.id == 573901){
+    p2.innerText = "Nike Trainers"
+  } else if(button.id == 658483){
+    p2.innerText = "Ralph Lauren Polo"
+  } else {
+    p2.innerText = ""
+  }
+    
+  bodyDiv.append(p1,p2)
   document.body.append(parentDiv)
 
   //TIMEOUTS
@@ -642,9 +681,14 @@ function generateModal() {
   let timer = setInterval(() => {
     switch (timerCounter) {
       case 0:
-        p2.classList.add("modalLine", "p2")
-        p1.innerText = "Matching Preferences..."
-        p2.innerText = "Size: M  Color: Blue"
+        p1.innerText = "Preferences Matched"
+        if(button.id == 573901){
+          p2.innerText = "Size: 11  Color: Blue"
+        } else if(button.id == 658483){
+          p2.innerText = "Size: L  Color: Red"
+        } else {
+          p2.innerText = "No Preference Found"
+        }        
         timerCounter++
         break;
       case 1:
@@ -663,8 +707,8 @@ function generateModal() {
         timerCounter++
         break;
       case 4:
-        parentDiv.id = "hidden"
-        timerCounter++
+        //parentDiv.id = "hidden"
+        //timerCounter++
         break;
       default:
         timerCounter=0;
@@ -696,7 +740,7 @@ function loadService() {
     reconnectSocket();
     generateButtons();
     checkToken();
-  }, 1000);
+  }, 3000);
 
 }
 
@@ -704,7 +748,10 @@ function loadService() {
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
-    loadService();
+    getFingerprint();
+    reconnectSocket();
+    generateButtons();
+    checkToken();
   } catch (error) {
     alert(error)
   }
