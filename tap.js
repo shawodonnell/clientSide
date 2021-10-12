@@ -3,55 +3,51 @@ let fingerprint;
 let token;
 let cartID;
 let isProcessing = false;
-let loaded = false;
 let products = [];
 let quantity = 1 || document.querySelector("#product_quantity").value;
 
 //SOCKETS********************************************************
-if(loaded){
-  let socket = io("http://127.0.0.1:3000", {
-    forceNew: true,
-    reconnection: false,
-    autoConnect: false,
-    timeout: 5000,
-  });
+let socket = io("http://127.0.0.1:3000", {
+  forceNew: true,
+  reconnection: false,
+  autoConnect: false,
+  timeout: 5000,
+});
 
-  socket.on("newConnect", (data) => {
-    socket.open();
-    console.log("Socket connection to Server established", socket.id);
-  })
+socket.on("newConnect", (data) => {
+  socket.open();
+  console.log("Socket connection to Server established", socket.id);
+})
 
-  socket.on("disconnect", () => {
-    console.log("Client socket disconnected");
-    socket.open();
-  })
+socket.on("disconnect", () => {
+  console.log("Client socket disconnected");
+  socket.open();
+})
 
-  socket.on("encryptedFingerPrint", (data) => {
-    fingerprint = data
-    console.log("Fingerprint Encrypted...", fingerprint);
-  })
+socket.on("encryptedFingerPrint", (data) => {
+  fingerprint = data
+  console.log("Fingerprint Encrypted...", fingerprint);
+})
 
-  socket.on("error", (error) => {
-    alert(error)
-    console.log(error);
-    resetElements();
-  })
+socket.on("error", (error) => {
+  alert(error)
+  console.log(error);
+  resetElements();
+})
 
-  socket.on("cartID", (data) => {
-    cartID = data;
-    console.log("PROCESSING CART ID...", cartID);
-  })
+socket.on("cartID", (data) => {
+  cartID = data;
+  console.log("PROCESSING CART ID...", cartID);
+})
 
-  socket.on("util", (data) => {
-    console.log(data);
-  })
+socket.on("util", (data) => {
+  console.log(data);
+})
 
-  socket.on("response", (data) => {
-    console.log(data);
-    resetElements()
-  })
-
-}  
+socket.on("response", (data) => {
+  console.log(data);
+  resetElements()
+})
 
 //*****CART SECTION*****
 //EVENT DELEGATION - Listens for click/onclick events on the webpage depending on browser, and if triggered then calls the makePurchase function.
@@ -626,21 +622,21 @@ function generateModal(button) {
   p2 = document.createElement("p")
   bodyDiv.classList.add("modalBody")
   p1.classList.add("modalLine", "p1")
-  p2.classList.add("modalLine","p2");
+  p2.classList.add("modalLine", "p2");
   parentDiv.append(headerDiv, bodyDiv)
   parentDiv.classList.add("dialog")
 
   //PLACEMENT
   p1.innerText = "Purchase Initiated..."
-  if(button.id == 573901){
+  if (button.id == 573901) {
     p2.innerText = "Nike Trainers"
-  } else if(button.id == 658483){
+  } else if (button.id == 658483) {
     p2.innerText = "Ralph Lauren Polo"
   } else {
     p2.innerText = ""
   }
-    
-  bodyDiv.append(p1,p2)
+
+  bodyDiv.append(p1, p2)
   document.body.append(parentDiv)
 
   //TIMEOUTS
@@ -649,13 +645,13 @@ function generateModal(button) {
     switch (timerCounter) {
       case 0:
         p1.innerText = "Preferences Matched"
-        if(button.id == 573901){
+        if (button.id == 573901) {
           p2.innerText = "Size: 11  Color: Blue"
-        } else if(button.id == 658483){
+        } else if (button.id == 658483) {
           p2.innerText = "Size: L  Color: Red"
         } else {
           p2.innerText = "No Preference Found"
-        }        
+        }
         timerCounter++
         break;
       case 1:
@@ -678,45 +674,21 @@ function generateModal(button) {
         //timerCounter++
         break;
       default:
-        timerCounter=0;
+        timerCounter = 0;
         clearInterval(timer)
         break;
     }
   }, 4000);
 }
 
-//LOADING FUNCTIONS AND LISTENERS******************************************
-function loadService() {
-  let cdns = [
-    "//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js",
-    "http://127.0.0.1:3000/socket.io/socket.io.js",
-    "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"
-  ]
-
-  for (const cdn of cdns) {
-    let script = document.createElement("script")
-    script.async = true
-    script.src = cdn
-    document.body.appendChild(script)
-
-  }
-  console.log("scripts inserted");
-  loaded = true;
-  setTimeout(() => {
-    getFingerprint();
-    reconnectSocket();
-    generateButtons();
-    checkToken();
-  }, 1000);
-
-}
-
 //EVENT LISTENERS*****************************************************
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
-    loadService()
+    getFingerprint();
+    reconnectSocket();
+    generateButtons();
+    checkToken();
   } catch (error) {
     alert(error)
   }
