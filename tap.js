@@ -3,11 +3,12 @@ let fingerprint;
 let token;
 let cartID;
 let isProcessing = false;
+let loaded = false;
 let products = [];
 let quantity = 1 || document.querySelector("#product_quantity").value;
 
 //SOCKETS********************************************************
-
+if(loaded){
   let socket = io("http://127.0.0.1:3000", {
     forceNew: true,
     reconnection: false,
@@ -49,6 +50,8 @@ let quantity = 1 || document.querySelector("#product_quantity").value;
     console.log(data);
     resetElements()
   })
+
+}  
 
 //*****CART SECTION*****
 //EVENT DELEGATION - Listens for click/onclick events on the webpage depending on browser, and if triggered then calls the makePurchase function.
@@ -604,37 +607,6 @@ function preferenceSize(selectedCategory) {
   })
 }
 
-function newModal(button){
-  modalContainer = document.createElement("div")
-  modalHead = document.createElement("div")
-  modalFoot = document.createElement("div")
-
-  //BODY
-  modalBody = document.createElement("div")
-  productContainer = document.createElement("div")
-  product
-  retailer
-  visaImg
-  cardNumber
-  prefContainer
-  colour
-  size
-  right
-
-  modalImage = document.createElement("div")
-  productImg
-  
-  modalSide = document.createElement("div")
-  price
-  data
-  time
-
-
-
-}
-
-
-
 function generateModal(button) {
   parentDiv = document.createElement("div")
 
@@ -730,6 +702,7 @@ function loadService() {
 
   }
   console.log("scripts inserted");
+  loaded = true;
   setTimeout(() => {
     getFingerprint();
     reconnectSocket();
