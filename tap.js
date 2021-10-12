@@ -735,7 +735,7 @@ function loadService() {
     reconnectSocket();
     generateButtons();
     checkToken();
-  }, 3000);
+  }, 1000);
 
 }
 
@@ -743,10 +743,7 @@ function loadService() {
 window.addEventListener("load", function () {
   try {
     console.log("loading....");
-    getFingerprint();
-    reconnectSocket();
-    generateButtons();
-    checkToken();
+    loadService()
   } catch (error) {
     alert(error)
   }
